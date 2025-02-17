@@ -28,6 +28,12 @@ public class ProductAPI {
         return ResponseEntity.ok(products);
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity GetProductById(@PathVariable long id){
+        Product product = productService.getProductById(id);
+        return ResponseEntity.ok(product);
+    }
+
     @PutMapping("{id}")
     public ResponseEntity updateProduct(@PathVariable long id, @Valid @RequestBody Product product){
         Product updateProduct = productService.update(id, product);

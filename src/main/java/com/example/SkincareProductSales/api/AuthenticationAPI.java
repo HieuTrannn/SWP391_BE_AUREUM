@@ -2,6 +2,8 @@ package com.example.SkincareProductSales.api;
 
 import com.example.SkincareProductSales.entity.Account;
 import com.example.SkincareProductSales.entity.request.AccountRequest;
+import com.example.SkincareProductSales.entity.request.AuthenticationRequest;
+import com.example.SkincareProductSales.entity.response.AuthenticationResponse;
 import com.example.SkincareProductSales.service.AuthenticationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,8 @@ public class AuthenticationAPI {
     }
 
     @PostMapping("login")
-    public ResponseEntity login (){
-        return null;
+    public ResponseEntity login (@RequestBody AuthenticationRequest authenticationRequest){
+        AuthenticationResponse authenticationResponse= authenticationService.login(authenticationRequest);
+        return ResponseEntity.ok(authenticationResponse);
     }
 }
