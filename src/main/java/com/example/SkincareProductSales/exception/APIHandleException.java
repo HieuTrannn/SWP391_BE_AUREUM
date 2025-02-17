@@ -1,5 +1,6 @@
 package com.example.SkincareProductSales.exception;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -27,5 +28,15 @@ public class APIHandleException {
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
     public ResponseEntity handleDuplicate(SQLIntegrityConstraintViolationException exception){
         return new ResponseEntity("Duplicate", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity handleNotFound(EntityNotFoundException foundException){
+        return new ResponseEntity("Not exist", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity handleNullPointer(NullPointerException exception) {
+        return new ResponseEntity(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
