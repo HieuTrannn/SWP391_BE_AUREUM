@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -26,7 +24,6 @@ public class Account implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // geneta tự động id
-    @JsonIgnore
     public long id;
 
     @NotBlank(message = "Full name cannot be blank")
@@ -35,6 +32,15 @@ public class Account implements UserDetails {
     @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Email not match Struct")
     @Column(unique = true)
     public String email;
+
+    @NotBlank(message = "Gender cannot be blank")
+    public String gender;
+
+    @Past(message = "Date of birth must be a past date")
+    public LocalDate dateOfBirth;
+
+    @NotBlank(message = "Address cannot be blank!")
+    public String address;
 
     @Size(min = 6, message = "Password must be exceed 6 characters")
     public String password;
@@ -58,10 +64,13 @@ public class Account implements UserDetails {
         return authorities;
     }
 
-    public Account(long id, String fullName, String email, String password, String phone, RoleEnum roleEnum) {
+    public Account(long id, String fullName, String email, String gender, LocalDate dateOfBirth, String address, String password, String phone, RoleEnum roleEnum) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
+        this.gender = gender;
+        this.dateOfBirth = dateOfBirth;
+        this.address = address;
         this.password = password;
         this.phone = phone;
         this.roleEnum = roleEnum;
@@ -92,6 +101,30 @@ public class Account implements UserDetails {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     @Override
