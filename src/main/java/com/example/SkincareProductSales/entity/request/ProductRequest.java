@@ -1,22 +1,15 @@
-package com.example.SkincareProductSales.entity;
+package com.example.SkincareProductSales.entity.request;
 
+import com.example.SkincareProductSales.entity.Category;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Entity
 
-public class Product {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long id;
+public class ProductRequest {
 
     @NotBlank(message = "Product name cannot be blank")
     public String name;
@@ -40,18 +33,13 @@ public class Product {
     @Column(unique = true) // từ giờ cột này sẽ không được trùng nhau
     public String code;
 
-    @JsonIgnore // Không bắt người dùng nhập thông tin này
-    public boolean isDeleted = false;
+    @NotNull
+    public long categoryId;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    public Category category;
-
-    public Product() {
+    public ProductRequest() {
     }
 
-    public Product(long id, String name, String brand, String description, int quantity, float price, String image, String code, boolean isDeleted, Category category) {
-        this.id = id;
+    public ProductRequest(String name, String brand, String description, int quantity, float price, String image, String code, long categoryId) {
         this.name = name;
         this.brand = brand;
         this.description = description;
@@ -59,16 +47,7 @@ public class Product {
         this.price = price;
         this.image = image;
         this.code = code;
-        this.isDeleted = isDeleted;
-        this.category = category;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+        this.categoryId = categoryId;
     }
 
     public String getName() {
@@ -127,19 +106,11 @@ public class Product {
         this.code = code;
     }
 
-    public boolean isDeleted() {
-        return isDeleted;
+    public long getCategoryId() {
+        return categoryId;
     }
 
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setCategoryId(long categoryId) {
+        this.categoryId = categoryId;
     }
 }
