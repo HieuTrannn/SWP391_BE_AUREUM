@@ -16,7 +16,6 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     public long id;
 
     @NotBlank(message = "Product name cannot be blank")
@@ -34,33 +33,34 @@ public class Product {
     @Min(value = 0, message = "Product price must be greater than 0")
     public float price;
 
-    @NotBlank(message = "Product category cannot be blank")
-    public String category;
-
     @NotBlank(message = "Product image cannot be blank")
     public String image;
 
-    @Pattern(regexp = "PD\\d{3}", message = "Code must be PDxxx!")
+    @Pattern(regexp = "PD\\d{5}", message = "Code must be PDxxx!")
     @Column(unique = true) // từ giờ cột này sẽ không được trùng nhau
     public String code;
 
     @JsonIgnore // Không bắt người dùng nhập thông tin này
     public boolean isDeleted = false;
 
-    public Product(long id, String name, String brand, String description, int quantity, float price, String category, String image, String code, boolean isDeleted) {
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    public Category category;
+
+    public Product() {
+    }
+
+    public Product(long id, String name, String brand, String description, int quantity, float price, String image, String code, boolean isDeleted, Category category) {
         this.id = id;
         this.name = name;
         this.brand = brand;
         this.description = description;
         this.quantity = quantity;
         this.price = price;
-        this.category = category;
         this.image = image;
         this.code = code;
         this.isDeleted = isDeleted;
-    }
-
-    public Product() {
+        this.category = category;
     }
 
     public long getId() {
@@ -111,14 +111,6 @@ public class Product {
         this.price = price;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     public String getImage() {
         return image;
     }
@@ -141,5 +133,13 @@ public class Product {
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }
