@@ -1,6 +1,7 @@
 package com.example.SkincareProductSales.api;
 
 import com.example.SkincareProductSales.entity.Product;
+import com.example.SkincareProductSales.entity.request.ProductRequest;
 import com.example.SkincareProductSales.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/product")
+@RequestMapping("/api/product")
 @CrossOrigin("*")
 public class ProductAPI {
 
@@ -18,14 +19,20 @@ public class ProductAPI {
     ProductService productService;
 
     @PostMapping
-    public ResponseEntity createProduct(@Valid @RequestBody Product product){
-        Product newProduct = productService.create(product);
+    public ResponseEntity createProduct(@Valid @RequestBody ProductRequest productRequest){
+        Product newProduct = productService.create(productRequest);
         return ResponseEntity.ok(newProduct);
     }
 
     @GetMapping
     public ResponseEntity GetAllProducts(){
         List<Product> products = productService.getAllProducts();
+        return ResponseEntity.ok(products);
+    }
+
+    @GetMapping("/getAllCategoryIsDeleted")
+    public ResponseEntity GetAllProductIsDeleted () {
+        List<Product> products = productService.getAllProductsIsDeleted();
         return ResponseEntity.ok(products);
     }
 
@@ -36,8 +43,8 @@ public class ProductAPI {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity updateProduct(@PathVariable long id, @Valid @RequestBody Product product){
-        Product updateProduct = productService.update(id, product);
+    public ResponseEntity updateProduct(@PathVariable long id, @Valid @RequestBody ProductRequest productRequest){
+        Product updateProduct = productService.update(id, productRequest);
         return ResponseEntity.ok(updateProduct);
     }
 
