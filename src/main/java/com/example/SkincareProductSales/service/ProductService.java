@@ -77,4 +77,9 @@ public class ProductService {
         }
         return  currentProduct;
     }
+
+    public List<Product> getAllProductsCategory_1() {
+
+        return productRepository.findProductsByCategory(1L);
+    }
 }

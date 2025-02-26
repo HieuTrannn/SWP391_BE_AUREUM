@@ -53,4 +53,10 @@ public class ProductAPI {
         Product product = productService.delete(id);
         return ResponseEntity.ok(product);
     }
+
+    @GetMapping("/category/taytrang")
+    public ResponseEntity GetAllProductCategory_1(){
+        List<Product> products = productService.getAllProductsCategory_1();
+        return ResponseEntity.ok(products);
+    }
 }
