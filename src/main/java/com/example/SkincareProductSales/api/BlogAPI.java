@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/blog")
+@CrossOrigin("*")
 public class BlogAPI {
     @Autowired
     BlogService blogService;
