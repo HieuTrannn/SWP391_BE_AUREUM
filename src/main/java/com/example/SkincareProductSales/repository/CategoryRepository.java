@@ -13,4 +13,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     List<Category> findCategoryByIsDeletedTrue();
 
+    Category getProductById(long id);
 }
