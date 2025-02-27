@@ -8,14 +8,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
+import java.util.List;
+
 
 public class ProductRequest {
 
     @NotBlank(message = "Product name cannot be blank")
     public String name;
-
-    @NotBlank(message = "Product brand cannot be blank")
-    public String brand;
 
     @NotBlank(message = "Product description cannot be blank")
     public String description;
@@ -36,18 +35,25 @@ public class ProductRequest {
     @NotNull
     public long categoryId;
 
+    @NotNull
+    public long brandId;
+
+    @NotNull
+    public List<Long> ingredientId;
+
     public ProductRequest() {
     }
 
-    public ProductRequest(String name, String brand, String description, int quantity, float price, String image, String code, long categoryId) {
+    public ProductRequest(String name, String description, int quantity, float price, String image, String code, long categoryId, long brandId, List<Long> ingredientId) {
         this.name = name;
-        this.brand = brand;
         this.description = description;
         this.quantity = quantity;
         this.price = price;
         this.image = image;
         this.code = code;
         this.categoryId = categoryId;
+        this.brandId = brandId;
+        this.ingredientId = ingredientId;
     }
 
     public String getName() {
@@ -56,14 +62,6 @@ public class ProductRequest {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
     }
 
     public String getDescription() {
@@ -112,5 +110,21 @@ public class ProductRequest {
 
     public void setCategoryId(long categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public long getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(long brandId) {
+        this.brandId = brandId;
+    }
+
+    public List<Long> getIngredientId() {
+        return ingredientId;
+    }
+
+    public void setIngredientId(List<Long> ingredientId) {
+        this.ingredientId = ingredientId;
     }
 }

@@ -10,6 +10,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 
 public class Product {
@@ -20,9 +23,6 @@ public class Product {
 
     @NotBlank(message = "Product name cannot be blank")
     public String name;
-
-    @NotBlank(message = "Product brand cannot be blank")
-    public String brand;
 
     @NotBlank(message = "Product description cannot be blank")
     public String description;
@@ -47,13 +47,25 @@ public class Product {
     @JoinColumn(name = "category_id")
     public Category category;
 
+    @ManyToOne
+    @JoinColumn(name = "brand_id")
+    public Brand brand;
+
+    @ManyToMany
+    @JoinTable(
+            name = "product_ingredient",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "ingredient_id")
+    )
+    public List<Ingredient> ingredient = new ArrayList<>();
+
+
     public Product() {
     }
 
-    public Product(long id, String name, String brand, String description, int quantity, float price, String image, String code, boolean isDeleted, Category category) {
+    public Product(long id, String name, String description, int quantity, float price, String image, String code, boolean isDeleted, Category category, Brand brand, List<Ingredient> ingredient) {
         this.id = id;
         this.name = name;
-        this.brand = brand;
         this.description = description;
         this.quantity = quantity;
         this.price = price;
@@ -61,6 +73,8 @@ public class Product {
         this.code = code;
         this.isDeleted = isDeleted;
         this.category = category;
+        this.brand = brand;
+        this.ingredient = ingredient;
     }
 
     public long getId() {
@@ -77,14 +91,6 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getBrand() {
-        return brand;
-    }
-
-    public void setBrand(String brand) {
-        this.brand = brand;
     }
 
     public String getDescription() {
@@ -141,5 +147,21 @@ public class Product {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
+    }
+
+    public List<Ingredient> getIngredient() {
+        return ingredient;
+    }
+
+    public void setIngredient(List<Ingredient> ingredient) {
+        this.ingredient = ingredient;
     }
 }
