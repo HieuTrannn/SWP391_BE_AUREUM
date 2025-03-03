@@ -9,6 +9,7 @@ import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,13 +34,14 @@ public class Account implements UserDetails {
     @Column(unique = true)
     public String email;
 
-    @NotBlank(message = "Gender cannot be blank")
+//    @NotBlank(message = "Gender cannot be blank")
     public String gender;
 
     @Past(message = "Date of birth must be a past date")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     public LocalDate dateOfBirth;
 
-    @NotBlank(message = "Address cannot be blank!")
+//    @NotBlank(message = "Address cannot be blank!")
     public String address;
 
     @Size(min = 6, message = "Password must be exceed 6 characters")
@@ -51,6 +53,9 @@ public class Account implements UserDetails {
 
     @Enumerated(value = EnumType.STRING)
     public RoleEnum roleEnum;
+
+    @JsonIgnore
+    public boolean isActive = true;
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@class")
     @JsonSubTypes({
@@ -64,7 +69,7 @@ public class Account implements UserDetails {
         return authorities;
     }
 
-    public Account(long id, String fullName, String email, String gender, LocalDate dateOfBirth, String address, String password, String phone, RoleEnum roleEnum) {
+    public Account(long id, String fullName, String email, String gender, LocalDate dateOfBirth, String address, String password, String phone, RoleEnum roleEnum, boolean isActive) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
@@ -74,6 +79,7 @@ public class Account implements UserDetails {
         this.password = password;
         this.phone = phone;
         this.roleEnum = roleEnum;
+        this.isActive = isActive;
     }
 
     public Account() {
@@ -150,6 +156,14 @@ public class Account implements UserDetails {
 
     public void setRoleEnum(RoleEnum roleEnum) {
         this.roleEnum = roleEnum;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 
     @Override
