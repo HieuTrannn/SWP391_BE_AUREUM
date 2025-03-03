@@ -1,9 +1,11 @@
 package com.example.SkincareProductSales.entity.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -19,6 +21,7 @@ public class UserRequest {
     public String gender;
 
     @Past(message = "Date of birth must be a past date")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     public LocalDate dateOfBirth;
 
     @NotBlank(message = "Address cannot be blank!")
@@ -74,4 +77,6 @@ public class UserRequest {
     public void setAddress(String address) {
         this.address = address;
     }
+
+
 }
