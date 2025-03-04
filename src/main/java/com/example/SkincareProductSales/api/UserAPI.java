@@ -23,12 +23,6 @@ public class UserAPI {
         return ResponseEntity.ok(accounts);
     }
 
-    @GetMapping("/getAllUsersIsActiveFalse")
-    public ResponseEntity getAllUsersIsActiveFalse() {
-        List<Account> accounts = userService.getAllUsersIsActiveFalse();
-        return ResponseEntity.ok(accounts);
-    }
-
     @GetMapping("{id}")
     public ResponseEntity getUserById(@PathVariable long id) {
         Account account = userService.getAccountById(id);
