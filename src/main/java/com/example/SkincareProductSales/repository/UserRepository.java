@@ -9,7 +9,4 @@ public interface UserRepository extends JpaRepository<Account, Long> {
 
     Account findAccountById(long id);
 
-    List<Account> findAccountByIsActiveFalse();
-
-    List<Account> findAccountByIsActiveTrue();
 }

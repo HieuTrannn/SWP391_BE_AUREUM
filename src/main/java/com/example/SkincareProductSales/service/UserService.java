@@ -16,11 +16,7 @@ public class UserService {
     UserRepository userRepository;
 
     public List<Account> getAllUsers() {
-        return userRepository.findAccountByIsActiveTrue();
-    }
-
-    public List<Account> getAllUsersIsActiveFalse() {
-        return userRepository.findAccountByIsActiveFalse();
+        return userRepository.findAll();
     }
 
     public Account getAccountById(long userId) {
