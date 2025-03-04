@@ -54,6 +54,9 @@ public class Account implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     public RoleEnum roleEnum;
 
+    @OneToMany(mappedBy = "account")
+    List<Order> orders = new ArrayList<>();
+
     @JsonIgnore
     public boolean isActive = true;
 
