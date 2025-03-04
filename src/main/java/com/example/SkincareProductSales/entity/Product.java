@@ -59,7 +59,8 @@ public class Product {
     )
     public List<Ingredient> ingredient = new ArrayList<>();
 
-
+    @OneToMany(mappedBy = "product")
+    List<OrderDetail> orderDetails = new ArrayList<>();
     public Product() {
     }
 
