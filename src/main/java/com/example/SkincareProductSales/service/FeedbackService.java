@@ -72,7 +72,7 @@ public class FeedbackService {
                         account.getFullName(),
                         account.getEmail(),
                         account.getRoleEnum(),
-                account.skinTypeEnum),
+                        account.getSkinTypeEnum()),
 
                 // Tạo ProductResponse từ Product
                 new ProductResponse(
