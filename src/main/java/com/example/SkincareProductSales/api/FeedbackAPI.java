@@ -3,6 +3,7 @@ package com.example.SkincareProductSales.api;
 import com.example.SkincareProductSales.entity.Feedback;
 import com.example.SkincareProductSales.entity.request.FeedbackRequest;
 import com.example.SkincareProductSales.service.FeedbackService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/feedback")
+@SecurityRequirement(name = "api")
 @CrossOrigin("*")
 public class FeedbackAPI {
 

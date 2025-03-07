@@ -4,6 +4,7 @@ import com.example.SkincareProductSales.entity.Ingredient;
 import com.example.SkincareProductSales.entity.request.IngredientRequest;
 import com.example.SkincareProductSales.repository.IngredientRepository;
 import com.example.SkincareProductSales.service.IngredientService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/ingredient")
 @CrossOrigin("*")
+@SecurityRequirement(name = "api")
+
 public class IngredientAPI {
 
     @Autowired
