@@ -1,5 +1,6 @@
 package com.example.SkincareProductSales.exception;
 
+import com.example.SkincareProductSales.exception.exceptions.AuthorizeException;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,10 @@ public class APIHandleException {
 
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity handleNullPointer(NullPointerException exception) {
+        return new ResponseEntity(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity handleRuntime(RuntimeException exception) {
         return new ResponseEntity(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }
