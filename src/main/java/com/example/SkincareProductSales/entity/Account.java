@@ -62,6 +62,10 @@ public class Account implements UserDetails {
     @JsonIgnore
     public boolean isActive = true;
 
+    @OneToMany(mappedBy = "account")
+    @JsonIgnore
+    public List<Feedback> feedbacks = new ArrayList<>();
+
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@class")
     @JsonSubTypes({
             @JsonSubTypes.Type(value = SimpleGrantedAuthority.class, name = "SimpleGrantedAuthority")
@@ -77,7 +81,7 @@ public class Account implements UserDetails {
         return authorities;
     }
 
-    public Account(long id, String username, String fullName, String email, String gender, LocalDate dateOfBirth, String address, String password, String phone, RoleEnum roleEnum, List<Order> orders, boolean isActive) {
+    public Account(long id, String username, String fullName, String email, String gender, LocalDate dateOfBirth, String address, String password, String phone, RoleEnum roleEnum, List<Order> orders, boolean isActive, List<Feedback> feedbacks) {
         this.id = id;
         this.username = username;
         this.fullName = fullName;
@@ -90,6 +94,7 @@ public class Account implements UserDetails {
         this.roleEnum = roleEnum;
         this.orders = orders;
         this.isActive = isActive;
+        this.feedbacks = feedbacks;
     }
 
     public Account() {
@@ -195,7 +200,13 @@ public class Account implements UserDetails {
         isActive = active;
     }
 
+    public List<Feedback> getFeedbacks() {
+        return feedbacks;
+    }
 
+    public void setFeedbacks(List<Feedback> feedbacks) {
+        this.feedbacks = feedbacks;
+    }
 
     @Override
     public boolean isAccountNonExpired() {
