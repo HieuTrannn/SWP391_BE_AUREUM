@@ -71,7 +71,8 @@ public class FeedbackService {
                         account.getId(),
                         account.getFullName(),
                         account.getEmail(),
-                        account.getRoleEnum()),
+                        account.getRoleEnum(),
+                account.skinTypeEnum),
 
                 // Tạo ProductResponse từ Product
                 new ProductResponse(

@@ -5,6 +5,7 @@ import com.example.SkincareProductSales.entity.request.AccountRequest;
 import com.example.SkincareProductSales.entity.request.AuthenticationRequest;
 import com.example.SkincareProductSales.entity.response.AuthenticationResponse;
 import com.example.SkincareProductSales.enums.RoleEnum;
+import com.example.SkincareProductSales.enums.SkinTypeEnum;
 import com.example.SkincareProductSales.repository.AuthenticationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -41,6 +42,7 @@ public class AuthenticationService implements UserDetailsService {
 
 
         account.setRoleEnum(RoleEnum.CUSTOMER);
+        account.setSkinTypeEnum(SkinTypeEnum.DACHUAKIEMTRA);
         account.setPhone(accountRequest.getPhone());
         account.setPassword(passwordEncoder.encode(accountRequest.getPassword()));
         account.setFullName(accountRequest.getFullName());

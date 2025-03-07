@@ -1,6 +1,7 @@
 package com.example.SkincareProductSales.entity;
 
 import com.example.SkincareProductSales.enums.RoleEnum;
+import com.example.SkincareProductSales.enums.SkinTypeEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -56,7 +57,12 @@ public class Account implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     public RoleEnum roleEnum;
 
+    @Enumerated(value = EnumType.STRING)
+    public SkinTypeEnum skinTypeEnum;
+
+
     @OneToMany(mappedBy = "account")
+            @JsonIgnore
     List<Order> orders = new ArrayList<>();
 
     @JsonIgnore
@@ -81,7 +87,15 @@ public class Account implements UserDetails {
         return authorities;
     }
 
-    public Account(long id, String username, String fullName, String email, String gender, LocalDate dateOfBirth, String address, String password, String phone, RoleEnum roleEnum, List<Order> orders, boolean isActive, List<Feedback> feedbacks) {
+    public SkinTypeEnum getSkinTypeEnum() {
+        return skinTypeEnum;
+    }
+
+    public void setSkinTypeEnum(SkinTypeEnum skinTypeEnum) {
+        this.skinTypeEnum = skinTypeEnum;
+    }
+
+    public Account(long id, String username, String fullName, String email, String gender, LocalDate dateOfBirth, String address, String password, String phone, RoleEnum roleEnum, SkinTypeEnum skinTypeEnum, List<Order> orders, boolean isActive, List<Feedback> feedbacks) {
         this.id = id;
         this.username = username;
         this.fullName = fullName;
@@ -92,6 +106,7 @@ public class Account implements UserDetails {
         this.password = password;
         this.phone = phone;
         this.roleEnum = roleEnum;
+        this.skinTypeEnum = skinTypeEnum;
         this.orders = orders;
         this.isActive = isActive;
         this.feedbacks = feedbacks;

@@ -1,7 +1,10 @@
 package com.example.SkincareProductSales.service;
 
 import com.example.SkincareProductSales.entity.Account;
+import com.example.SkincareProductSales.entity.Order;
 import com.example.SkincareProductSales.entity.request.UserRequest;
+import com.example.SkincareProductSales.enums.OrderStatusEnum;
+import com.example.SkincareProductSales.enums.SkinTypeEnum;
 import com.example.SkincareProductSales.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +60,12 @@ public class UserService {
         currentUser.setActive(!currentUser.isActive());
 
         return userRepository.save(currentUser);
+    }
+
+    public Account updateSkinType(SkinTypeEnum skinTypeEnum, long id){
+        Account account = userRepository.findAccountById(id);
+        account.setSkinTypeEnum(skinTypeEnum);
+        return userRepository.save(account);
     }
 
 }
