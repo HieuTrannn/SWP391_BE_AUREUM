@@ -2,6 +2,7 @@ package com.example.SkincareProductSales.api;
 
 import com.example.SkincareProductSales.entity.Feedback;
 import com.example.SkincareProductSales.entity.request.FeedbackRequest;
+import com.example.SkincareProductSales.entity.response.FeedbackResponse;
 import com.example.SkincareProductSales.service.FeedbackService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -22,19 +23,13 @@ public class FeedbackAPI {
 
     @PostMapping
     public ResponseEntity createFeedback (@Valid @RequestBody FeedbackRequest feedbackRequest) {
-        Feedback feedback = feedbackService.createFeedback(feedbackRequest);
-        return ResponseEntity.ok(feedback);
+        FeedbackResponse feedbackResponse = feedbackService.createFeedback(feedbackRequest);
+        return ResponseEntity.ok(feedbackResponse);
     }
 
     @GetMapping
     public ResponseEntity getAllFeedback () {
         List<Feedback> feedbacks = feedbackService.getAllFeedback();
-        return ResponseEntity.ok(feedbacks);
-    }
-
-    @GetMapping("/getAllFeedbackIsDeleted")
-    public ResponseEntity getAllFeedbackIsDeleted () {
-        List<Feedback> feedbacks = feedbackService.getAllFeedbackIsDeleted();
         return ResponseEntity.ok(feedbacks);
     }
 
@@ -48,11 +43,5 @@ public class FeedbackAPI {
     public ResponseEntity updateFeedback (@PathVariable long id, @Valid @RequestBody FeedbackRequest feedbackRequest) {
         Feedback updateFeedback = feedbackService.updateFeedback(id, feedbackRequest);
         return ResponseEntity.ok(updateFeedback);
-    }
-
-    @DeleteMapping("{id}")
-    public ResponseEntity deleteFeedback (@PathVariable long id) {
-        Feedback deleteFeedback = feedbackService.deleteFeedback(id);
-        return ResponseEntity.ok(deleteFeedback);
     }
 }
