@@ -40,7 +40,7 @@ public class TokenService {
         Claims claims = Jwts.parser()
                 .verifyWith(getSignKey())
                 .build()
-                .parseEncryptedClaims(token)
+                .parseSignedClaims(token)
                 .getPayload();
         String idString = claims.getSubject();
         long id = Long.parseLong(idString);
