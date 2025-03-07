@@ -3,6 +3,7 @@ package com.example.SkincareProductSales.api;
 import com.example.SkincareProductSales.entity.Brand;
 import com.example.SkincareProductSales.entity.request.BrandRequest;
 import com.example.SkincareProductSales.service.BrandService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/brand")
 @CrossOrigin("*")
+@SecurityRequirement(name = "api")
+
 public class BrandAPI {
 
     @Autowired

@@ -1,24 +1,18 @@
-package com.example.SkincareProductSales.entity;
+package com.example.SkincareProductSales.entity.response;
 
+import com.example.SkincareProductSales.entity.Account;
+import com.example.SkincareProductSales.entity.OrderDetail;
 import com.example.SkincareProductSales.enums.OrderStatusEnum;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Getter
-@Setter
-@Entity
-@Table(name = "orders")
-public class Order {
+@Data
+public class OrderResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long id;
 
 
@@ -26,19 +20,19 @@ public class Order {
     public float total;
     public OrderStatusEnum status = OrderStatusEnum.IN_PROCESS;
 
-    @ManyToOne
-    @JoinColumn(name = "account_id")
     Account account;
-
-    @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
     List<OrderDetail> orderDetails = new ArrayList<>();
 
-    public long getId() {
-        return id;
+    public OrderResponse(long id, Date createAt, float total, OrderStatusEnum status, Account account, List<OrderDetail> orderDetails) {
+        this.id = id;
+        this.createAt = createAt;
+        this.total = total;
+        this.status = status;
+        this.account = account;
+        this.orderDetails = orderDetails;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public OrderResponse() {
     }
 
     public Date getCreateAt() {
@@ -81,15 +75,11 @@ public class Order {
         this.orderDetails = orderDetails;
     }
 
-    public Order() {
+    public long getId() {
+        return id;
     }
 
-    public Order(long id, Date createAt, float total, OrderStatusEnum status, Account account, List<OrderDetail> orderDetails) {
+    public void setId(long id) {
         this.id = id;
-        this.createAt = createAt;
-        this.total = total;
-        this.status = status;
-        this.account = account;
-        this.orderDetails = orderDetails;
     }
 }

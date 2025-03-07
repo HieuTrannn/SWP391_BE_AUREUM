@@ -3,6 +3,7 @@ package com.example.SkincareProductSales.api;
 import com.example.SkincareProductSales.entity.Blog;
 import com.example.SkincareProductSales.entity.Product;
 import com.example.SkincareProductSales.service.BlogService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,8 @@ import java.util.List;
 @RestController
 @RequestMapping("api/blog")
 @CrossOrigin("*")
+@SecurityRequirement(name = "api")
+
 public class BlogAPI {
     @Autowired
     BlogService blogService;

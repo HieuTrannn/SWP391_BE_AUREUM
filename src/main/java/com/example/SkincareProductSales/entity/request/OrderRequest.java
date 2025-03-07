@@ -4,7 +4,21 @@ import lombok.Data;
 
 import java.util.List;
 
-@Data
 public class OrderRequest {
  private List<OrderDetailRequest> details;
+
+ public OrderRequest(List<OrderDetailRequest> details) {
+  this.details = details;
+ }
+
+ public OrderRequest() {
+ }
+
+ public List<OrderDetailRequest> getDetails() {
+  return details;
+ }
+
+ public void setDetails(List<OrderDetailRequest> details) {
+  this.details = details;
+ }
 }

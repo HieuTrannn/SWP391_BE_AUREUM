@@ -26,9 +26,11 @@ public class Account implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // geneta tự động id
     public long id;
-
+@Column(unique = true)
+    public String username;
     @NotBlank(message = "Full name cannot be blank")
     public String fullName;
+
 
     @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Email not match Struct")
     @Column(unique = true)
@@ -68,12 +70,16 @@ public class Account implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(this.roleEnum.toString()));
+        if(this.getRoleEnum() != null){
+            authorities.add(new SimpleGrantedAuthority(this.roleEnum.toString()));
+        }
+
         return authorities;
     }
 
-    public Account(long id, String fullName, String email, String gender, LocalDate dateOfBirth, String address, String password, String phone, RoleEnum roleEnum, boolean isActive) {
+    public Account(long id, String username, String fullName, String email, String gender, LocalDate dateOfBirth, String address, String password, String phone, RoleEnum roleEnum, List<Order> orders, boolean isActive) {
         this.id = id;
+        this.username = username;
         this.fullName = fullName;
         this.email = email;
         this.gender = gender;
@@ -82,10 +88,36 @@ public class Account implements UserDetails {
         this.password = password;
         this.phone = phone;
         this.roleEnum = roleEnum;
+        this.orders = orders;
         this.isActive = isActive;
     }
 
     public Account() {
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 
     public long getId() {
@@ -112,17 +144,11 @@ public class Account implements UserDetails {
         this.email = email;
     }
 
-    public String getGender() {
-        return gender;
-    }
 
     public void setGender(String gender) {
         this.gender = gender;
     }
 
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
@@ -169,10 +195,7 @@ public class Account implements UserDetails {
         isActive = active;
     }
 
-    @Override
-    public String getUsername() {
-        return "";
-    }
+
 
     @Override
     public boolean isAccountNonExpired() {

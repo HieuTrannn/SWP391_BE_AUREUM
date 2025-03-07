@@ -3,6 +3,7 @@ package com.example.SkincareProductSales.repository;
 import com.example.SkincareProductSales.entity.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 // nguyên lí mô hình 3 lớp
@@ -14,4 +15,6 @@ public interface AuthenticationRepository extends JpaRepository<Account, Long> {
     Account findById (long id);
 
     Optional<Account> findByEmail(String email);
+
+    Optional<Account> findByUsername(String username);
 }
