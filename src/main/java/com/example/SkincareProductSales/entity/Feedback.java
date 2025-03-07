@@ -1,10 +1,8 @@
 package com.example.SkincareProductSales.entity;
 
+import com.example.SkincareProductSales.enums.RatingEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -19,14 +17,15 @@ public class Feedback {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long id;
 
-    @Min(value = 0, message = "Rating must be at least 1")
-    @Max(value = 5, message = "Rating must be at most 5")
-    public int rating;
+//    @Min(value = 0, message = "Rating must be at least 1")
+//    @Max(value = 5, message = "Rating must be at most 5")
+    @Enumerated(EnumType.STRING)
+    public RatingEnum ratingEnum;
 
     @NotBlank(message = "Comment cannot be blank!")
     public String comment;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     public Date CommentAt;
 
     public String image;
@@ -34,16 +33,26 @@ public class Feedback {
     @JsonIgnore
     public boolean isDeleted = false;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    public Account account;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    public Product product;
+
     public Feedback() {
     }
 
-    public Feedback(long id, int rating, String comment, Date commentAt, String image, boolean isDeleted) {
+    public Feedback(long id, RatingEnum ratingEnum, String comment, Date commentAt, String image, boolean isDeleted, Account account, Product product) {
         this.id = id;
-        this.rating = rating;
+        this.ratingEnum = ratingEnum;
         this.comment = comment;
         CommentAt = commentAt;
         this.image = image;
         this.isDeleted = isDeleted;
+        this.account = account;
+        this.product = product;
     }
 
     public long getId() {
@@ -54,12 +63,12 @@ public class Feedback {
         this.id = id;
     }
 
-    public int getRating() {
-        return rating;
+    public RatingEnum getRatingEnum() {
+        return ratingEnum;
     }
 
-    public void setRating(int rating) {
-        this.rating = rating;
+    public void setRatingEnum(RatingEnum ratingEnum) {
+        this.ratingEnum = ratingEnum;
     }
 
     public String getComment() {
@@ -92,5 +101,21 @@ public class Feedback {
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 }

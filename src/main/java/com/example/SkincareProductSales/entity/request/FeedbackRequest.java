@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -22,13 +23,21 @@ public class FeedbackRequest {
 
     public String image;
 
+    @NotNull
+    public long userId;
+
+    @NotNull
+    public long productId;
+
     public FeedbackRequest() {
     }
 
-    public FeedbackRequest(int rating, String comment, String image) {
+    public FeedbackRequest(int rating, String comment, String image, long userId, long productId) {
         this.rating = rating;
         this.comment = comment;
         this.image = image;
+        this.userId = userId;
+        this.productId = productId;
     }
 
     public int getRating() {
@@ -55,4 +64,19 @@ public class FeedbackRequest {
         this.image = image;
     }
 
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(long productId) {
+        this.productId = productId;
+    }
 }

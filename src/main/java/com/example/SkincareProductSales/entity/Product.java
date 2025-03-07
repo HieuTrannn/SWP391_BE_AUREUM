@@ -64,7 +64,10 @@ public class Product {
     public Product() {
     }
 
-    public Product(long id, String name, String description, int quantity, float price, String image, String code, boolean isDeleted, Category category, Brand brand, List<Ingredient> ingredient) {
+    @OneToMany(mappedBy = "product")
+    public List<Feedback> feedbacks = new ArrayList<>();
+
+    public Product(long id, String name, String description, int quantity, float price, String image, String code, boolean isDeleted, Category category, Brand brand, List<Ingredient> ingredient, List<OrderDetail> orderDetails, List<Feedback> feedbacks) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -76,6 +79,8 @@ public class Product {
         this.category = category;
         this.brand = brand;
         this.ingredient = ingredient;
+        this.orderDetails = orderDetails;
+        this.feedbacks = feedbacks;
     }
 
     public long getId() {
@@ -164,5 +169,21 @@ public class Product {
 
     public void setIngredient(List<Ingredient> ingredient) {
         this.ingredient = ingredient;
+    }
+
+    public List<OrderDetail> getOrderDetails() {
+        return orderDetails;
+    }
+
+    public void setOrderDetails(List<OrderDetail> orderDetails) {
+        this.orderDetails = orderDetails;
+    }
+
+    public List<Feedback> getFeedbacks() {
+        return feedbacks;
+    }
+
+    public void setFeedbacks(List<Feedback> feedbacks) {
+        this.feedbacks = feedbacks;
     }
 }
