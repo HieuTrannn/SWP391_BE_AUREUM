@@ -60,11 +60,13 @@ public class Product {
     public List<Ingredient> ingredient = new ArrayList<>();
 
     @OneToMany(mappedBy = "product")
+            @JsonIgnore
     List<OrderDetail> orderDetails = new ArrayList<>();
     public Product() {
     }
 
     @OneToMany(mappedBy = "product")
+    @JsonIgnore
     public List<Feedback> feedbacks = new ArrayList<>();
 
     public Product(long id, String name, String description, int quantity, float price, String image, String code, boolean isDeleted, Category category, Brand brand, List<Ingredient> ingredient, List<OrderDetail> orderDetails, List<Feedback> feedbacks) {
