@@ -4,9 +4,25 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+
+
 public class LoginGoogleRequest {
     private String token;
+
+
+    public LoginGoogleRequest() {
+    }
+
+
+    public String getToken() {
+        return token;
+    }
+
+    public LoginGoogleRequest(String token) {
+        this.token = token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 }

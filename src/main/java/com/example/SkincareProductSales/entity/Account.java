@@ -68,6 +68,15 @@ public class Account implements UserDetails {
     @JsonIgnore
     public boolean isActive = true;
 
+
+    @ManyToOne
+    @JoinColumn(name = "skin_id")
+    public Skin skin;
+
+
+
+
+
     @OneToMany(mappedBy = "account")
     @JsonIgnore
     public List<Feedback> feedbacks = new ArrayList<>();
@@ -95,7 +104,16 @@ public class Account implements UserDetails {
         this.skinTypeEnum = skinTypeEnum;
     }
 
-    public Account(long id, String username, String fullName, String email, String gender, LocalDate dateOfBirth, String address, String password, String phone, RoleEnum roleEnum, SkinTypeEnum skinTypeEnum, List<Order> orders, boolean isActive, List<Feedback> feedbacks) {
+
+    public Skin getSkin() {
+        return skin;
+    }
+
+    public void setSkin(Skin skin) {
+        this.skin = skin;
+    }
+
+    public Account(long id, String username, String fullName, String email, String gender, LocalDate dateOfBirth, String address, String password, String phone, RoleEnum roleEnum, SkinTypeEnum skinTypeEnum, List<Order> orders, boolean isActive, Skin skin, List<Feedback> feedbacks) {
         this.id = id;
         this.username = username;
         this.fullName = fullName;
@@ -109,6 +127,7 @@ public class Account implements UserDetails {
         this.skinTypeEnum = skinTypeEnum;
         this.orders = orders;
         this.isActive = isActive;
+        this.skin = skin;
         this.feedbacks = feedbacks;
     }
 

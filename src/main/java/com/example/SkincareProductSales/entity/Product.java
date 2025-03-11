@@ -50,6 +50,10 @@ public class Product {
     public Category category;
 
     @ManyToOne
+    @JoinColumn(name = "skin_id")
+    public Skin skin;
+
+    @ManyToOne
     @JoinColumn(name = "brand_id")
     public Brand brand;
 
@@ -83,7 +87,15 @@ public class Product {
         this.skinTypeEnum = skinTypeEnum;
     }
 
-    public Product(long id, String name, String description, int quantity, float price, String image, String code, boolean isDeleted, Category category, Brand brand, List<Ingredient> ingredient, List<OrderDetail> orderDetails, List<Feedback> feedbacks, SkinTypeEnum skinTypeEnum) {
+    public Skin getSkin() {
+        return skin;
+    }
+
+    public void setSkin(Skin skin) {
+        this.skin = skin;
+    }
+
+    public Product(long id, String name, String description, int quantity, float price, String image, String code, boolean isDeleted, Category category, Skin skin, Brand brand, List<Ingredient> ingredient, List<OrderDetail> orderDetails, List<Feedback> feedbacks, SkinTypeEnum skinTypeEnum) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -93,6 +105,7 @@ public class Product {
         this.code = code;
         this.isDeleted = isDeleted;
         this.category = category;
+        this.skin = skin;
         this.brand = brand;
         this.ingredient = ingredient;
         this.orderDetails = orderDetails;
