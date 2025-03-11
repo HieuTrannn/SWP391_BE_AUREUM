@@ -6,6 +6,9 @@ import com.example.SkincareProductSales.service.ProductService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +30,17 @@ public class ProductAPI {
         return ResponseEntity.ok(newProduct);
     }
 
+    @GetMapping("/pageable")
+    public ResponseEntity GetAllProductsByPage(@RequestParam(defaultValue = "0") int currentPage,
+                                             @RequestParam(defaultValue = "10") int pageSize
+                                         ) {
+        Pageable pageable = PageRequest.of(currentPage, pageSize);
+        Page<Product> products = productService.getAllProductsByPage(pageable);
+        return ResponseEntity.ok(products);
+    }
+
     @GetMapping
-    public ResponseEntity GetAllProducts(){
+    public ResponseEntity getAllProduct(){
         List<Product> products = productService.getAllProducts();
         return ResponseEntity.ok(products);
     }
