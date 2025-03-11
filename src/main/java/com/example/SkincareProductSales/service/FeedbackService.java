@@ -71,8 +71,8 @@ public class FeedbackService {
                         account.getId(),
                         account.getFullName(),
                         account.getEmail(),
-                        account.getRoleEnum(),
-                        account.getSkinTypeEnum()),
+                        account.getRoleEnum()
+                        ),
 
                 // Tạo ProductResponse từ Product
                 new ProductResponse(
@@ -81,8 +81,8 @@ public class FeedbackService {
                         new BrandResponse(product.getBrand().getName()),
                         new CategoryResponse(product.getCategory().getName()),
                         product.getCode(),
-                        product.getSkinTypeEnum()
-                        )
+                        new SkinResponse(product.getSkin().getName())
+                )
         );
     }
 

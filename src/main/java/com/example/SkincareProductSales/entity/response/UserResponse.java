@@ -1,7 +1,6 @@
 package com.example.SkincareProductSales.entity.response;
 
 import com.example.SkincareProductSales.enums.RoleEnum;
-import com.example.SkincareProductSales.enums.SkinTypeEnum;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 
@@ -13,26 +12,15 @@ public class UserResponse {
 
     @Enumerated(EnumType.STRING)
     public RoleEnum roleEnum;
-    @Enumerated(EnumType.STRING)
-    public SkinTypeEnum skinTypeEnum;
-
-    public SkinTypeEnum getSkinTypeEnum() {
-        return skinTypeEnum;
-    }
-
-    public void setSkinTypeEnum(SkinTypeEnum skinTypeEnum) {
-        this.skinTypeEnum = skinTypeEnum;
-    }
 
     public UserResponse() {
     }
 
-    public UserResponse(long id, String fullName, String email, RoleEnum roleEnum, SkinTypeEnum skinTypeEnum) {
+    public UserResponse(long id, String fullName, String email, RoleEnum roleEnum) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
         this.roleEnum = roleEnum;
-        this.skinTypeEnum = skinTypeEnum;
     }
 
     public long getId() {

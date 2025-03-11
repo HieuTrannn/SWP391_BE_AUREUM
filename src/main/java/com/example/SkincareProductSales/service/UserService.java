@@ -1,11 +1,9 @@
 package com.example.SkincareProductSales.service;
 
 import com.example.SkincareProductSales.entity.Account;
-import com.example.SkincareProductSales.entity.Order;
+import com.example.SkincareProductSales.entity.Skin;
 import com.example.SkincareProductSales.entity.request.UserRequest;
-import com.example.SkincareProductSales.enums.OrderStatusEnum;
-import com.example.SkincareProductSales.enums.RoleEnum;
-import com.example.SkincareProductSales.enums.SkinTypeEnum;
+import com.example.SkincareProductSales.repository.SkinRepository;
 import com.example.SkincareProductSales.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +16,9 @@ public class UserService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    SkinRepository skinRepository;
 
     public List<Account> getAllUsers() {
         return userRepository.findAll();
@@ -39,6 +40,12 @@ public class UserService {
        currentUser.setGender(userRequest.getGender());
        currentUser.setDateOfBirth(userRequest.getDateOfBirth());
        currentUser.setAddress(userRequest.getAddress());
+
+        // Lấy đối tượng Skin từ skinId trong userRequest
+        Skin skin = skinRepository.findSkinById(userRequest.getSkinId());
+
+        // Cập nhật skin của người dùng
+        currentUser.setSkin(skin);
 
        return userRepository.save(currentUser);
     }
@@ -62,16 +69,4 @@ public class UserService {
 
         return userRepository.save(currentUser);
     }
-
-    public Account updateSkinType(SkinTypeEnum skinTypeEnum, long id){
-        Account account = userRepository.findAccountById(id);
-        account.setSkinTypeEnum(skinTypeEnum);
-        return userRepository.save(account);
-    }
-
-        public Account updateRole(RoleEnum roleEnum, long id){
-            Account account = userRepository.findAccountById(id);
-            account.setRoleEnum(roleEnum);
-            return userRepository.save(account);
-        }
 }

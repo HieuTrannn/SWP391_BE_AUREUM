@@ -17,8 +17,6 @@ public class Feedback {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long id;
 
-//    @Min(value = 0, message = "Rating must be at least 1")
-//    @Max(value = 5, message = "Rating must be at most 5")
     @Enumerated(EnumType.STRING)
     public RatingEnum ratingEnum;
 

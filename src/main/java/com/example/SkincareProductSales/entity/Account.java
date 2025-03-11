@@ -1,7 +1,6 @@
 package com.example.SkincareProductSales.entity;
 
 import com.example.SkincareProductSales.enums.RoleEnum;
-import com.example.SkincareProductSales.enums.SkinTypeEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -27,17 +26,14 @@ public class Account implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // geneta tự động id
     public long id;
-@Column(unique = true)
-    public String username;
+
     @NotBlank(message = "Full name cannot be blank")
     public String fullName;
-
 
     @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Email not match Struct")
     @Column(unique = true)
     public String email;
 
-//    @NotBlank(message = "Gender cannot be blank")
     public String gender;
 
     @Past(message = "Date of birth must be a past date")
@@ -57,10 +53,6 @@ public class Account implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     public RoleEnum roleEnum;
 
-    @Enumerated(value = EnumType.STRING)
-    public SkinTypeEnum skinTypeEnum;
-
-
     @OneToMany(mappedBy = "account")
             @JsonIgnore
     List<Order> orders = new ArrayList<>();
@@ -68,14 +60,9 @@ public class Account implements UserDetails {
     @JsonIgnore
     public boolean isActive = true;
 
-
     @ManyToOne
     @JoinColumn(name = "skin_id")
     public Skin skin;
-
-
-
-
 
     @OneToMany(mappedBy = "account")
     @JsonIgnore
@@ -96,15 +83,6 @@ public class Account implements UserDetails {
         return authorities;
     }
 
-    public SkinTypeEnum getSkinTypeEnum() {
-        return skinTypeEnum;
-    }
-
-    public void setSkinTypeEnum(SkinTypeEnum skinTypeEnum) {
-        this.skinTypeEnum = skinTypeEnum;
-    }
-
-
     public Skin getSkin() {
         return skin;
     }
@@ -113,9 +91,8 @@ public class Account implements UserDetails {
         this.skin = skin;
     }
 
-    public Account(long id, String username, String fullName, String email, String gender, LocalDate dateOfBirth, String address, String password, String phone, RoleEnum roleEnum, SkinTypeEnum skinTypeEnum, List<Order> orders, boolean isActive, Skin skin, List<Feedback> feedbacks) {
+    public Account(long id, String fullName, String email, String gender, LocalDate dateOfBirth, String address, String password, String phone, RoleEnum roleEnum, List<Order> orders, boolean isActive, Skin skin, List<Feedback> feedbacks) {
         this.id = id;
-        this.username = username;
         this.fullName = fullName;
         this.email = email;
         this.gender = gender;
@@ -124,7 +101,6 @@ public class Account implements UserDetails {
         this.password = password;
         this.phone = phone;
         this.roleEnum = roleEnum;
-        this.skinTypeEnum = skinTypeEnum;
         this.orders = orders;
         this.isActive = isActive;
         this.skin = skin;
@@ -136,11 +112,7 @@ public class Account implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+        return email;
     }
 
     public String getGender() {
