@@ -1,12 +1,18 @@
 package com.example.SkincareProductSales.api;
 
+import com.example.SkincareProductSales.entity.Brand;
 import com.example.SkincareProductSales.entity.Category;
 import com.example.SkincareProductSales.entity.request.CategoryRequest;
+import com.example.SkincareProductSales.repository.BrandRepository;
 import com.example.SkincareProductSales.service.CategoryService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +27,7 @@ public class CategoryAPI {
     @Autowired
     CategoryService categoryService;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public ResponseEntity createCategory (@Valid @RequestBody CategoryRequest categoryRequest) {
         Category newCategory = categoryService.createCategory(categoryRequest);

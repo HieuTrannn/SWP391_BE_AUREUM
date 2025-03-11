@@ -4,6 +4,7 @@ import com.example.SkincareProductSales.entity.Account;
 import com.example.SkincareProductSales.entity.Order;
 import com.example.SkincareProductSales.entity.request.UserRequest;
 import com.example.SkincareProductSales.enums.OrderStatusEnum;
+import com.example.SkincareProductSales.enums.RoleEnum;
 import com.example.SkincareProductSales.enums.SkinTypeEnum;
 import com.example.SkincareProductSales.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -34,7 +35,7 @@ public class UserService {
         Account currentUser = userRepository.findAccountById(userId);
 
        currentUser.setFullName(userRequest.getFullName());
-       currentUser.setEmail(userRequest.getEmail());
+       currentUser.setPhone(userRequest.getPhone());
        currentUser.setGender(userRequest.getGender());
        currentUser.setDateOfBirth(userRequest.getDateOfBirth());
        currentUser.setAddress(userRequest.getAddress());
@@ -68,4 +69,9 @@ public class UserService {
         return userRepository.save(account);
     }
 
+        public Account updateRole(RoleEnum roleEnum, long id){
+            Account account = userRepository.findAccountById(id);
+            account.setRoleEnum(roleEnum);
+            return userRepository.save(account);
+        }
 }

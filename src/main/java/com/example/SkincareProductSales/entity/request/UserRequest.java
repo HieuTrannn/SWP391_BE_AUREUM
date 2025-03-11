@@ -2,40 +2,35 @@ package com.example.SkincareProductSales.entity.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
 public class UserRequest {
+
     @NotBlank(message = "Full name cannot be blank")
     public String fullName;
 
-    @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Email not match Struct")
-    @Column(unique = true)
-    public String email;
-
-    @NotBlank(message = "Gender cannot be blank")
     public String gender;
 
     @Past(message = "Date of birth must be a past date")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     public LocalDate dateOfBirth;
 
-    @NotBlank(message = "Address cannot be blank!")
     public String address;
+
+    public String phone;
 
     public UserRequest() {
     }
 
-    public UserRequest(String fullName, String email, String gender, LocalDate dateOfBirth, String address) {
+    public UserRequest(String fullName, String gender, LocalDate dateOfBirth, String address, String phone) {
         this.fullName = fullName;
-        this.email = email;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
         this.address = address;
+        this.phone = phone;
     }
 
     public String getFullName() {
@@ -44,14 +39,6 @@ public class UserRequest {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getGender() {
@@ -78,5 +65,11 @@ public class UserRequest {
         this.address = address;
     }
 
+    public String getPhone() {
+        return phone;
+    }
 
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 }
