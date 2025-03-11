@@ -10,6 +10,7 @@ import com.example.SkincareProductSales.repository.AuthenticationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -52,33 +53,30 @@ public class AuthenticationService implements UserDetailsService {
         return newAccount;
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return authenticationRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("Account not found!"));
-    }
+
 
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest) {
         try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            authenticationRequest.getEmail(),
-                            authenticationRequest.getPassword()
-                    )
-            );
-        } catch (Exception e){
-            throw new NullPointerException("Wrong Email or password!");
+            Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    authenticationRequest.getEmail(),
+                    authenticationRequest.getPassword()
+            ));
+            Account account = (Account) authenticate.getPrincipal();
+            AuthenticationResponse authenticationResponse = new AuthenticationResponse();
+            authenticationResponse.setId(account.getId());
+            authenticationResponse.setFullName(account.getFullName());
+            authenticationResponse.setEmail(account.getEmail());
+            authenticationResponse.setPhone(account.getPhone());
+            authenticationResponse.setRoleEnum(account.getRoleEnum());
+            authenticationResponse.setToken(tokenService.GenerateToken(account));
+            return authenticationResponse;
+        } catch (Exception e) {
+            throw new RuntimeException("invalid Login");
         }
-        Account account = authenticationRepository.findByEmail(authenticationRequest.getEmail()).orElseThrow();
-        String token= tokenService.GenerateToken(account);
-        AuthenticationResponse authenticationResponse = new AuthenticationResponse();
+    }
 
-        authenticationResponse.setId(account.getId());
-        authenticationResponse.setFullName(account.getFullName());
-        authenticationResponse.setEmail(account.getEmail());
-        authenticationResponse.setPhone(account.getPhone());
-        authenticationResponse.setRoleEnum(account.getRoleEnum());
-        authenticationResponse.setToken(token);
-
-        return authenticationResponse;
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return authenticationRepository.findByEmail(email).orElseThrow();
     }
 }
