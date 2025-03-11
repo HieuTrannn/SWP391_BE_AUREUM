@@ -59,6 +59,7 @@ public class ProductService {
         product.setCategory(category);
         product.setBrand(brand);
         product.setIngredient(ingredients);
+        product.setSkinTypeEnum(productRequest.getSkinTypeEnum());
 
         // gọi xuống repo để lưu xuống database
         return productRepository.save(product);

@@ -80,7 +80,9 @@ public class FeedbackService {
                         product.getName(),
                         new BrandResponse(product.getBrand().getName()),
                         new CategoryResponse(product.getCategory().getName()),
-                        product.getCode())
+                        product.getCode(),
+                        product.getSkinTypeEnum()
+                        )
         );
     }
 
@@ -111,12 +113,4 @@ public class FeedbackService {
         return feedbackRepository.save(currentFeedback);
     }
 
-    public Feedback deleteFeedback(long feedbackId) {
-        Feedback currentFeedback = feedbackRepository.findFeedbackById(feedbackId);
-        if (currentFeedback == null) {
-            throw new EntityNotFoundException("Feedback Not Found!");
-        }
-        currentFeedback.setDeleted(true);
-        return feedbackRepository.save(currentFeedback);
-    }
 }

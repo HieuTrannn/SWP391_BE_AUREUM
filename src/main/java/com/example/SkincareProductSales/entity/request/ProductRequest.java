@@ -1,6 +1,7 @@
 package com.example.SkincareProductSales.entity.request;
 
 import com.example.SkincareProductSales.entity.Category;
+import com.example.SkincareProductSales.enums.SkinTypeEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -41,10 +42,21 @@ public class ProductRequest {
     @NotNull
     public List<Long> ingredientId;
 
+    @Enumerated(value = EnumType.STRING)
+    public SkinTypeEnum skinTypeEnum;
+
     public ProductRequest() {
     }
 
-    public ProductRequest(String name, String description, int quantity, float price, String image, String code, long categoryId, long brandId, List<Long> ingredientId) {
+    public SkinTypeEnum getSkinTypeEnum() {
+        return skinTypeEnum;
+    }
+
+    public void setSkinTypeEnum(SkinTypeEnum skinTypeEnum) {
+        this.skinTypeEnum = skinTypeEnum;
+    }
+
+    public ProductRequest(String name, String description, int quantity, float price, String image, String code, long categoryId, long brandId, List<Long> ingredientId, SkinTypeEnum skinTypeEnum) {
         this.name = name;
         this.description = description;
         this.quantity = quantity;
@@ -54,6 +66,7 @@ public class ProductRequest {
         this.categoryId = categoryId;
         this.brandId = brandId;
         this.ingredientId = ingredientId;
+        this.skinTypeEnum = skinTypeEnum;
     }
 
     public String getName() {

@@ -20,83 +20,86 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
+import java.security.SignatureException;
 import java.util.List;
 
 @Component
 public class Filter extends OncePerRequestFilter {
-
+    @Autowired
+    TokenService tokenService;
 
     @Autowired
     @Qualifier("handlerExceptionResolver")
     HandlerExceptionResolver resolver;
 
-    @Autowired
-    TokenService tokenService;
-
-    List<String> PUBLIC_API = List.of(
+    private final List<String> AUTH_PERMISSION = List.of(
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/swagger-resources/**",
             "/api/login",
-            "/api/register"
+            "/api/register",
+            "/api/loginGoogle"
+
     );
 
-
-    boolean isPermitted(HttpServletRequest request){
+    public boolean checkIsPublicAPI(String uri) {
+        // uri: /api/register
+        // nếu gặp những cái api trong list ở trên => cho phép truy cập lun => true
         AntPathMatcher patchMatch = new AntPathMatcher();
-        String uri = request.getRequestURI();
-        String method = request.getMethod();
-
-        if(method.equals("GET") && patchMatch.match("/api/product/**", uri)){
-            return true; // public api
-        }
-
-        return PUBLIC_API.stream().anyMatch(item -> patchMatch.match(item, uri));
+        // check token => false
+        return AUTH_PERMISSION.stream().anyMatch(pattern -> patchMatch.match(pattern, uri));
     }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        // filterChain.doFilter(request,response); // cho phép truy cập vào controller
 
-        // check trước khi cho truy cập
+        // check xem cái api mà người dùng yêu cầu có phải là 1 public api?
 
-        String uri = request.getRequestURI();
-        if(isPermitted(request)){
-            // public API
-            filterChain.doFilter(request,response);
-        }else{
-            // không phải là public API => check role
+        boolean isPublicAPI = checkIsPublicAPI(request.getRequestURI());
+
+        if (isPublicAPI) {
+            filterChain.doFilter(request, response);
+        } else {
             String token = getToken(request);
-
-            if(token == null){
-                // chưa đăng nhập => quăng lỗi
-                resolver.resolveException(request, response, null, new AuthorizeException("Authentication token is missing!"));
+            if (token == null) {
+                // ko được phép truy cập
+                resolver.resolveException(request, response, null, new RuntimeException("empty token"));
+                return;
             }
 
-            Account account = new Account();
-            try{
+            // => có token
+            // check xem token có đúng hay ko => lấy thông tin account từ token
+            Account account;
+            try {
                 account = tokenService.getAccountByToken(token);
-            }catch (MalformedJwtException malformedJwtException){
-                resolver.resolveException(request, response, null, new AuthorizeException("Authentication token is invalid!"));
-            }catch (ExpiredJwtException expiredJwtException){
-                resolver.resolveException(request, response, null, new AuthorizeException("Authentication token is expired!"));
-            }catch (Exception exception){
-                resolver.resolveException(request, response, null, new AuthorizeException("Authentication token is invalid!"));
+            } catch (ExpiredJwtException e) {
+                // response token hết hạn
+                resolver.resolveException(request, response, null, new RuntimeException("Ivalid token"));
+                return;
+            } catch (MalformedJwtException malformedJwtException) {
+                // response token sai
+                resolver.resolveException(request, response, null, new RuntimeException("Ivalid token"));
+                return;
             }
-         
             // => token chuẩn
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(account,
+            // => cho phép truy cập
+            // => lưu lại thông tin account
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    account,
                     token,
-                    account != null ? account.getAuthorities() : null);
-            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authToken);
-            filterChain.doFilter(request,response);
+                    account.getAuthorities()
+            );
+            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            // token ok, cho vao`
+            filterChain.doFilter(request, response);
         }
+
     }
 
-    String getToken(HttpServletRequest request){
-        String token = request.getHeader("Authorization");
-        if(token == null) return null;
-        return token.substring(7);
+    public String getToken(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null) return null;
+        return authHeader.substring(7);
     }
-
 }
