@@ -1,5 +1,6 @@
 package com.example.SkincareProductSales.entity;
 
+import com.example.SkincareProductSales.enums.SkinTypeEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
@@ -25,6 +26,7 @@ public class Product {
     public String name;
 
     @NotBlank(message = "Product description cannot be blank")
+    @Column(length = 10000)
     public String description;
 
     @Min(value = 0, message = "Product quantity must be greater than 0")
@@ -65,11 +67,23 @@ public class Product {
     public Product() {
     }
 
+
     @OneToMany(mappedBy = "product")
     @JsonIgnore
     public List<Feedback> feedbacks = new ArrayList<>();
 
-    public Product(long id, String name, String description, int quantity, float price, String image, String code, boolean isDeleted, Category category, Brand brand, List<Ingredient> ingredient, List<OrderDetail> orderDetails, List<Feedback> feedbacks) {
+    @Enumerated(value = EnumType.STRING)
+    public SkinTypeEnum skinTypeEnum;
+
+    public SkinTypeEnum getSkinTypeEnum() {
+        return skinTypeEnum;
+    }
+
+    public void setSkinTypeEnum(SkinTypeEnum skinTypeEnum) {
+        this.skinTypeEnum = skinTypeEnum;
+    }
+
+    public Product(long id, String name, String description, int quantity, float price, String image, String code, boolean isDeleted, Category category, Brand brand, List<Ingredient> ingredient, List<OrderDetail> orderDetails, List<Feedback> feedbacks, SkinTypeEnum skinTypeEnum) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -83,6 +97,7 @@ public class Product {
         this.ingredient = ingredient;
         this.orderDetails = orderDetails;
         this.feedbacks = feedbacks;
+        this.skinTypeEnum = skinTypeEnum;
     }
 
     public long getId() {
