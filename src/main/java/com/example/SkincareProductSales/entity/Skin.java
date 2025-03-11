@@ -2,6 +2,7 @@ package com.example.SkincareProductSales.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +12,17 @@ public class Skin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     public long id;
 
-    private String name;
+    public String name;
+
+    @JsonIgnore
+    public boolean isDeleted = false;
 
     @OneToMany(mappedBy = "skin")
     @JsonIgnore
     public List<Product> products = new ArrayList<>();
+
     @OneToMany(mappedBy = "skin")
     @JsonIgnore
     public List<Account> accounts = new ArrayList<>();
@@ -42,6 +46,22 @@ public class Skin {
     public Skin() {
     }
 
+    public Skin(long id, String name, boolean isDeleted, List<Product> products, List<Account> accounts) {
+        this.id = id;
+        this.name = name;
+        this.isDeleted = isDeleted;
+        this.products = products;
+        this.accounts = accounts;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
     public List<Product> getProducts() {
         return products;
     }
@@ -55,13 +75,6 @@ public class Skin {
     }
 
     public void setAccounts(List<Account> accounts) {
-        this.accounts = accounts;
-    }
-
-    public Skin(long id, String name, List<Product> products, List<Account> accounts) {
-        this.id = id;
-        this.name = name;
-        this.products = products;
         this.accounts = accounts;
     }
 }

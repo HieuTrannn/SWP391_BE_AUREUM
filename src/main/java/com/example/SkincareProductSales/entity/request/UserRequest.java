@@ -22,15 +22,19 @@ public class UserRequest {
 
     public String phone;
 
+    @NotNull
+    public long skinId;
+
     public UserRequest() {
     }
 
-    public UserRequest(String fullName, String gender, LocalDate dateOfBirth, String address, String phone) {
+    public UserRequest(String fullName, String gender, LocalDate dateOfBirth, String address, String phone, long skinId) {
         this.fullName = fullName;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
         this.address = address;
         this.phone = phone;
+        this.skinId = skinId;
     }
 
     public String getFullName() {
@@ -71,5 +75,13 @@ public class UserRequest {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public long getSkinId() {
+        return skinId;
+    }
+
+    public void setSkinId(long skinId) {
+        this.skinId = skinId;
     }
 }
