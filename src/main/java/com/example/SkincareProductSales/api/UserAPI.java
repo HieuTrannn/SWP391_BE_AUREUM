@@ -4,6 +4,7 @@ import com.example.SkincareProductSales.entity.Account;
 import com.example.SkincareProductSales.entity.Order;
 import com.example.SkincareProductSales.entity.request.UserRequest;
 import com.example.SkincareProductSales.enums.OrderStatusEnum;
+import com.example.SkincareProductSales.enums.RoleEnum;
 import com.example.SkincareProductSales.enums.SkinTypeEnum;
 import com.example.SkincareProductSales.service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -47,7 +48,7 @@ public class UserAPI {
         return ResponseEntity.ok(updateAccount);
     }
 
-    @PatchMapping("{id}")
+    @PatchMapping("/updateSkinType/{id}")
     public ResponseEntity updateSkinType(@RequestParam SkinTypeEnum skinTypeEnum, @PathVariable Long id){
         Account account = userService.updateSkinType(skinTypeEnum,id);
         return ResponseEntity.ok(account);
