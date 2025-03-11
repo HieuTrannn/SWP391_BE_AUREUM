@@ -12,6 +12,8 @@ import com.example.SkincareProductSales.repository.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
@@ -103,6 +105,10 @@ public class ProductService {
             throw new EntityNotFoundException("Product Not Found!");
         }
         return  currentProduct;
+    }
+
+    public Page<Product> getAllProductsByPage(Pageable pageable){
+        return productRepository.findProductsByIsDeletedFalse(pageable);
     }
 
     public List<Product> getAllProductsCategory_1() {
