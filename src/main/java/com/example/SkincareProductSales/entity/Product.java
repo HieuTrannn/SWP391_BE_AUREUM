@@ -1,11 +1,9 @@
 package com.example.SkincareProductSales.entity;
 
-import com.example.SkincareProductSales.enums.SkinTypeEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,7 +36,7 @@ public class Product {
     @NotBlank(message = "Product image cannot be blank")
     public String image;
 
-    @Pattern(regexp = "PD\\d{5}", message = "Code must be PDxxx!")
+    @Pattern(regexp = "PD\\d{5}", message = "Code must be PDxxxxx!")
     @Column(unique = true) // từ giờ cột này sẽ không được trùng nhau
     public String code;
 
@@ -68,34 +66,15 @@ public class Product {
     @OneToMany(mappedBy = "product")
             @JsonIgnore
     List<OrderDetail> orderDetails = new ArrayList<>();
-    public Product() {
-    }
-
 
     @OneToMany(mappedBy = "product")
     @JsonIgnore
     public List<Feedback> feedbacks = new ArrayList<>();
 
-    @Enumerated(value = EnumType.STRING)
-    public SkinTypeEnum skinTypeEnum;
-
-    public SkinTypeEnum getSkinTypeEnum() {
-        return skinTypeEnum;
+    public Product() {
     }
 
-    public void setSkinTypeEnum(SkinTypeEnum skinTypeEnum) {
-        this.skinTypeEnum = skinTypeEnum;
-    }
-
-    public Skin getSkin() {
-        return skin;
-    }
-
-    public void setSkin(Skin skin) {
-        this.skin = skin;
-    }
-
-    public Product(long id, String name, String description, int quantity, float price, String image, String code, boolean isDeleted, Category category, Skin skin, Brand brand, List<Ingredient> ingredient, List<OrderDetail> orderDetails, List<Feedback> feedbacks, SkinTypeEnum skinTypeEnum) {
+    public Product(long id, String name, String description, int quantity, float price, String image, String code, boolean isDeleted, Category category, Skin skin, Brand brand, List<Ingredient> ingredient, List<OrderDetail> orderDetails, List<Feedback> feedbacks) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -110,7 +89,14 @@ public class Product {
         this.ingredient = ingredient;
         this.orderDetails = orderDetails;
         this.feedbacks = feedbacks;
-        this.skinTypeEnum = skinTypeEnum;
+    }
+
+    public Skin getSkin() {
+        return skin;
+    }
+
+    public void setSkin(Skin skin) {
+        this.skin = skin;
     }
 
     public long getId() {

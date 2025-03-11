@@ -21,7 +21,6 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long id;
 
-
     public Date createAt;
     public float total;
     public OrderStatusEnum status = OrderStatusEnum.IN_PROCESS;

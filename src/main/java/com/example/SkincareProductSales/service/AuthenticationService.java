@@ -6,7 +6,6 @@ import com.example.SkincareProductSales.entity.request.AuthenticationRequest;
 import com.example.SkincareProductSales.entity.request.LoginGoogleRequest;
 import com.example.SkincareProductSales.entity.response.AuthenticationResponse;
 import com.example.SkincareProductSales.enums.RoleEnum;
-import com.example.SkincareProductSales.enums.SkinTypeEnum;
 import com.example.SkincareProductSales.repository.AuthenticationRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
@@ -47,7 +46,6 @@ public class AuthenticationService implements UserDetailsService {
 
 
         account.setRoleEnum(RoleEnum.CUSTOMER);
-        account.setSkinTypeEnum(SkinTypeEnum.DACHUAKIEMTRA);
         account.setPhone(accountRequest.getPhone());
         account.setPassword(passwordEncoder.encode(accountRequest.getPassword()));
         account.setFullName(accountRequest.getFullName());
@@ -72,7 +70,6 @@ public class AuthenticationService implements UserDetailsService {
             authenticationResponse.setEmail(account.getEmail());
             authenticationResponse.setPhone(account.getPhone());
             authenticationResponse.setRoleEnum(account.getRoleEnum());
-            authenticationResponse.setSkinTypeEnum(account.getSkinTypeEnum());
             authenticationResponse.setToken(tokenService.GenerateToken(account));
             return authenticationResponse;
         } catch (Exception e) {
@@ -102,7 +99,6 @@ public class AuthenticationService implements UserDetailsService {
                 newAccount.setFullName(fullName);
                 newAccount.setRoleEnum(RoleEnum.CUSTOMER);
                 newAccount.setActive(true);
-                newAccount.setSkinTypeEnum(SkinTypeEnum.DACHUAKIEMTRA);
                 account = authenticationRepository.save(newAccount);
             }
             authenticationResponse.setId(account.getId());
@@ -110,7 +106,6 @@ public class AuthenticationService implements UserDetailsService {
             authenticationResponse.setEmail(account.getEmail());
             authenticationResponse.setPhone(account.getPhone());
             authenticationResponse.setRoleEnum(account.getRoleEnum());
-            authenticationResponse.setSkinTypeEnum(account.getSkinTypeEnum());
             authenticationResponse.setToken(tokenService.GenerateToken(account));
             return authenticationResponse;
 

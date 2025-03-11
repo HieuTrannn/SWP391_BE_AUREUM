@@ -1,8 +1,5 @@
 package com.example.SkincareProductSales.entity.request;
 
-import com.example.SkincareProductSales.entity.Category;
-import com.example.SkincareProductSales.enums.SkinTypeEnum;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -42,21 +39,13 @@ public class ProductRequest {
     @NotNull
     public List<Long> ingredientId;
 
-    @Enumerated(value = EnumType.STRING)
-    public SkinTypeEnum skinTypeEnum;
+    @NotNull
+    public long skinId;
 
     public ProductRequest() {
     }
 
-    public SkinTypeEnum getSkinTypeEnum() {
-        return skinTypeEnum;
-    }
-
-    public void setSkinTypeEnum(SkinTypeEnum skinTypeEnum) {
-        this.skinTypeEnum = skinTypeEnum;
-    }
-
-    public ProductRequest(String name, String description, int quantity, float price, String image, String code, long categoryId, long brandId, List<Long> ingredientId, SkinTypeEnum skinTypeEnum) {
+    public ProductRequest(String name, String description, int quantity, float price, String image, String code, long categoryId, long brandId, List<Long> ingredientId, long skinId) {
         this.name = name;
         this.description = description;
         this.quantity = quantity;
@@ -66,7 +55,7 @@ public class ProductRequest {
         this.categoryId = categoryId;
         this.brandId = brandId;
         this.ingredientId = ingredientId;
-        this.skinTypeEnum = skinTypeEnum;
+        this.skinId = skinId;
     }
 
     public String getName() {
@@ -139,5 +128,13 @@ public class ProductRequest {
 
     public void setIngredientId(List<Long> ingredientId) {
         this.ingredientId = ingredientId;
+    }
+
+    public long getSkinId() {
+        return skinId;
+    }
+
+    public void setSkinId(long skinId) {
+        this.skinId = skinId;
     }
 }

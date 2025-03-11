@@ -1,14 +1,8 @@
 package com.example.SkincareProductSales.service;
 
-import com.example.SkincareProductSales.entity.Brand;
-import com.example.SkincareProductSales.entity.Category;
-import com.example.SkincareProductSales.entity.Ingredient;
-import com.example.SkincareProductSales.entity.Product;
+import com.example.SkincareProductSales.entity.*;
 import com.example.SkincareProductSales.entity.request.ProductRequest;
-import com.example.SkincareProductSales.repository.BrandRepository;
-import com.example.SkincareProductSales.repository.CategoryRepository;
-import com.example.SkincareProductSales.repository.IngredientRepository;
-import com.example.SkincareProductSales.repository.ProductRepository;
+import com.example.SkincareProductSales.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +31,9 @@ public class ProductService {
     @Autowired
     IngredientRepository ingredientRepository;
 
+    @Autowired
+    SkinRepository skinRepository;
+
     public List<Product> getAllProducts(){
         return productRepository.findProductsByIsDeletedFalse();
     }
@@ -52,6 +49,7 @@ public class ProductService {
         Category category = categoryRepository.findCategoryById(productRequest.categoryId);
         Brand brand = brandRepository.findBrandById(productRequest.brandId);
         List<Ingredient> ingredients = ingredientRepository.findAllById(productRequest.getIngredientId());
+        Skin skin = skinRepository.findSkinById(productRequest.skinId);
         if (category == null) {
             throw new NullPointerException("Category ID " + productRequest.getCategoryId() + " does not exist");
         } else if (brand == null) {
@@ -61,7 +59,7 @@ public class ProductService {
         product.setCategory(category);
         product.setBrand(brand);
         product.setIngredient(ingredients);
-        product.setSkinTypeEnum(productRequest.getSkinTypeEnum());
+        product.setSkin(skin);
 
         // gọi xuống repo để lưu xuống database
         return productRepository.save(product);
@@ -81,11 +79,13 @@ public class ProductService {
         Category category = categoryRepository.findCategoryById(productRequest.getCategoryId());
         Brand brand = brandRepository.findBrandById(productRequest.getBrandId());
         List<Ingredient> ingredient = ingredientRepository.findAllById(productRequest.getIngredientId());
+        Skin skin = skinRepository.findSkinById(productRequest.getSkinId());
 
         // Cập nhật category của sản phẩm
         currentProduct.setCategory(category);
         currentProduct.setBrand(brand);
         currentProduct.setIngredient(ingredient);
+        currentProduct.setSkin(skin);
 
         return productRepository.save(currentProduct);
     }
