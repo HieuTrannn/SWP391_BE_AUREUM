@@ -31,6 +31,7 @@ public class Order {
     Account account;
 
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
+            @JsonIgnore
     List<OrderDetail> orderDetails = new ArrayList<>();
 
     public long getId() {
