@@ -2,8 +2,6 @@ package com.example.SkincareProductSales.entity.response;
 
 import com.example.SkincareProductSales.entity.Account;
 import com.example.SkincareProductSales.entity.OrderDetail;
-import com.example.SkincareProductSales.enums.OrderStatusEnum;
-import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -18,16 +16,15 @@ public class OrderResponse {
 
     public Date createAt;
     public float total;
-    public OrderStatusEnum status = OrderStatusEnum.IN_PROCESS;
 
     Account account;
     List<OrderDetail> orderDetails = new ArrayList<>();
 
-    public OrderResponse(long id, Date createAt, float total, OrderStatusEnum status, Account account, List<OrderDetail> orderDetails) {
+
+    public OrderResponse(long id, Date createAt, float total, Account account, List<OrderDetail> orderDetails) {
         this.id = id;
         this.createAt = createAt;
         this.total = total;
-        this.status = status;
         this.account = account;
         this.orderDetails = orderDetails;
     }
@@ -51,13 +48,6 @@ public class OrderResponse {
         this.total = total;
     }
 
-    public OrderStatusEnum getStatus() {
-        return status;
-    }
-
-    public void setStatus(OrderStatusEnum status) {
-        this.status = status;
-    }
 
     public Account getAccount() {
         return account;
