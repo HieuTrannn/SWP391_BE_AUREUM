@@ -2,6 +2,7 @@ package com.example.SkincareProductSales.entity.response;
 
 import com.example.SkincareProductSales.entity.Account;
 import com.example.SkincareProductSales.entity.OrderDetail;
+import com.example.SkincareProductSales.enums.OrderStatus;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -18,14 +19,24 @@ public class OrderResponse {
     public float total;
 
     Account account;
+
+    public OrderStatus status = OrderStatus.IN_PROCESS;
     List<OrderDetail> orderDetails = new ArrayList<>();
 
+    public OrderStatus getStatus() {
+        return status;
+    }
 
-    public OrderResponse(long id, Date createAt, float total, Account account, List<OrderDetail> orderDetails) {
+    public void setStatus(OrderStatus status) {
+        this.status = status;
+    }
+
+    public OrderResponse(long id, Date createAt, float total, Account account, OrderStatus status, List<OrderDetail> orderDetails) {
         this.id = id;
         this.createAt = createAt;
         this.total = total;
         this.account = account;
+        this.status = status;
         this.orderDetails = orderDetails;
     }
 
