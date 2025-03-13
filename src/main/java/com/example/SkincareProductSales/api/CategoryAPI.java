@@ -27,7 +27,6 @@ public class CategoryAPI {
     @Autowired
     CategoryService categoryService;
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public ResponseEntity createCategory (@Valid @RequestBody CategoryRequest categoryRequest) {
         Category newCategory = categoryService.createCategory(categoryRequest);
