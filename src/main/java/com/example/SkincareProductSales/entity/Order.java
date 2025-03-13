@@ -1,9 +1,7 @@
 package com.example.SkincareProductSales.entity;
 
-import com.example.SkincareProductSales.enums.OrderStatusEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,7 +21,6 @@ public class Order {
 
     public Date createAt;
     public float total;
-    public OrderStatusEnum status = OrderStatusEnum.IN_PROCESS;
 
     @ManyToOne
     @JoinColumn(name = "account_id")
@@ -57,13 +54,7 @@ public class Order {
         this.total = total;
     }
 
-    public OrderStatusEnum getStatus() {
-        return status;
-    }
 
-    public void setStatus(OrderStatusEnum status) {
-        this.status = status;
-    }
 
     public Account getAccount() {
         return account;
@@ -84,11 +75,10 @@ public class Order {
     public Order() {
     }
 
-    public Order(long id, Date createAt, float total, OrderStatusEnum status, Account account, List<OrderDetail> orderDetails) {
+    public Order(long id, Date createAt, float total, Account account, List<OrderDetail> orderDetails) {
         this.id = id;
         this.createAt = createAt;
         this.total = total;
-        this.status = status;
         this.account = account;
         this.orderDetails = orderDetails;
     }
