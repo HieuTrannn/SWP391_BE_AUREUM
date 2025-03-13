@@ -6,6 +6,7 @@ import com.example.SkincareProductSales.entity.OrderDetail;
 import com.example.SkincareProductSales.entity.Product;
 import com.example.SkincareProductSales.entity.request.OrderDetailRequest;
 import com.example.SkincareProductSales.entity.request.OrderRequest;
+import com.example.SkincareProductSales.enums.OrderStatus;
 import com.example.SkincareProductSales.repository.OrderRepository;
 import com.example.SkincareProductSales.repository.ProductRepository;
 
@@ -38,6 +39,13 @@ public class OrderService {
 
     @Autowired
     AccountUtils accountUtils;
+
+
+    public Order updateStatus(OrderStatus status, long id){
+        Order order = orderRepository.findOrderById(id);
+        order.setStatus(status);
+        return orderRepository.save(order);
+    }
 
 
 
