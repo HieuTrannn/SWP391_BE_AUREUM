@@ -70,6 +70,7 @@ public class AuthenticationService implements UserDetailsService {
             authenticationResponse.setEmail(account.getEmail());
             authenticationResponse.setPhone(account.getPhone());
             authenticationResponse.setRoleEnum(account.getRoleEnum());
+            authenticationResponse.setActive(account.isActive());
             authenticationResponse.setToken(tokenService.GenerateToken(account));
             return authenticationResponse;
         } catch (Exception e) {
@@ -79,7 +80,7 @@ public class AuthenticationService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return authenticationRepository.findByEmail(email).orElseThrow();
+        return authenticationRepository.findByEmail(email);
     }
 
 
@@ -90,9 +91,9 @@ public class AuthenticationService implements UserDetailsService {
             String email = decodedToken.getEmail();
             String fullName = decodedToken.getName();
 
-
-            Account account = authenticationRepository.findByEmail(email).orElseThrow();
+            Account account = authenticationRepository.findByEmail(email);
             AuthenticationResponse authenticationResponse = new AuthenticationResponse();
+
             if (account == null) {
                 Account newAccount = new Account();
                 newAccount.setEmail(email);
@@ -106,6 +107,7 @@ public class AuthenticationService implements UserDetailsService {
             authenticationResponse.setEmail(account.getEmail());
             authenticationResponse.setPhone(account.getPhone());
             authenticationResponse.setRoleEnum(account.getRoleEnum());
+            authenticationResponse.setActive(account.isActive());
             authenticationResponse.setToken(tokenService.GenerateToken(account));
             return authenticationResponse;
 

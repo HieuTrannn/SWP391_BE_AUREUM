@@ -23,7 +23,7 @@ public class AccountUtils implements ApplicationContextAware {
     public Account getCurrentAccount() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        return userRepo.findByEmail(email).orElseThrow() ;
+        return userRepo.findByEmail(email);
     }
 
 }

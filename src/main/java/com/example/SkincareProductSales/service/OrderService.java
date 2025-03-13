@@ -69,7 +69,7 @@ public class OrderService {
                 orderDetails.add(orderDetail);
                 product.setQuantity(product.getQuantity() - orderDetailRequest.getQuantity());
                 productRepository.save(product);
-                total += orderDetail.getPrice();
+                total += orderDetail.getPrice() * orderDetailRequest.getQuantity();
             }else {
                 throw new RuntimeException("Product was sold out!!");
             }
@@ -100,7 +100,7 @@ public class OrderService {
         String tmnCode = "9DZT14DS";
         String secretKey = "ND04E7FEO088030GBYXWTV917RTEDN33";
         String vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        String returnUrl = "http://localhost:8081/?orderId=" +order.getId();
+        String returnUrl = "http://localhost:5173/payment-result?orderId=" +order.getId();
 
         String currCode = "VND";
         Map<String, String> vnpParams = new TreeMap<>();

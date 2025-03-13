@@ -1,6 +1,7 @@
 package com.example.SkincareProductSales.entity.response;
 
 import com.example.SkincareProductSales.enums.RoleEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 
@@ -15,16 +16,20 @@ public class AuthenticationResponse {
 
     public String token;
 
+    @JsonIgnore
+    public boolean isActive;
+
     public AuthenticationResponse() {
     }
 
-    public AuthenticationResponse(long id, String fullName, String email, String phone, RoleEnum roleEnum, String token) {
+    public AuthenticationResponse(long id, String fullName, String email, String phone, RoleEnum roleEnum, String token, boolean isActive) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
         this.roleEnum = roleEnum;
         this.token = token;
+        this.isActive = isActive;
     }
 
     public long getId() {
@@ -73,5 +78,13 @@ public class AuthenticationResponse {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }
