@@ -6,14 +6,10 @@ import com.example.SkincareProductSales.entity.OrderDetail;
 import com.example.SkincareProductSales.entity.Product;
 import com.example.SkincareProductSales.entity.request.OrderDetailRequest;
 import com.example.SkincareProductSales.entity.request.OrderRequest;
-import com.example.SkincareProductSales.entity.response.OrderResponse;
-import com.example.SkincareProductSales.enums.OrderStatusEnum;
-import com.example.SkincareProductSales.repository.AuthenticationRepository;
 import com.example.SkincareProductSales.repository.OrderRepository;
 import com.example.SkincareProductSales.repository.ProductRepository;
 
 import com.example.SkincareProductSales.utils.AccountUtils;
-import org.aspectj.weaver.ast.Or;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +23,6 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -45,12 +40,6 @@ public class OrderService {
     AccountUtils accountUtils;
 
 
-
-    public Order updateStatus(OrderStatusEnum status, long id){
-        Order order = orderRepository.findOrderById(id);
-        order.setStatus(status);
-        return orderRepository.save(order);
-    }
 
     public String create(OrderRequest orderRequest) throws Exception{
 

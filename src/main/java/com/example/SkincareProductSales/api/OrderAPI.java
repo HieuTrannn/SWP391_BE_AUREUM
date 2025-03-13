@@ -2,8 +2,6 @@ package com.example.SkincareProductSales.api;
 
 import com.example.SkincareProductSales.entity.Order;
 import com.example.SkincareProductSales.entity.request.OrderRequest;
-import com.example.SkincareProductSales.entity.response.OrderResponse;
-import com.example.SkincareProductSales.enums.OrderStatusEnum;
 import com.example.SkincareProductSales.service.OrderService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +25,6 @@ public class OrderAPI {
         return ResponseEntity.ok(urlPayment);
     }
 
-    @PatchMapping("{id}")
-    public ResponseEntity updateStatus(@RequestParam OrderStatusEnum statusEnum, @PathVariable Long id){
-        Order order = orderService.updateStatus(statusEnum,id);
-        return ResponseEntity.ok(order);
-    }
 
     @GetMapping
     public ResponseEntity getAll(){
