@@ -1,5 +1,6 @@
 package com.example.SkincareProductSales.entity;
 
+import com.example.SkincareProductSales.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -25,6 +26,10 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "account_id")
     Account account;
+
+    public OrderStatus status = OrderStatus.IN_PROCESS;
+
+
 
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
             @JsonIgnore
@@ -75,11 +80,20 @@ public class Order {
     public Order() {
     }
 
-    public Order(long id, Date createAt, float total, Account account, List<OrderDetail> orderDetails) {
+    public Order(long id, Date createAt, float total, Account account, OrderStatus status, List<OrderDetail> orderDetails) {
         this.id = id;
         this.createAt = createAt;
         this.total = total;
         this.account = account;
+        this.status = status;
         this.orderDetails = orderDetails;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
     }
 }
