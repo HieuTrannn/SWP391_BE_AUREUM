@@ -1,43 +1,30 @@
 package com.example.SkincareProductSales.entity.request;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
+public class RatingRequest {
 
-public class FeedbackRequest {
+    public Long orderDetailId;
 
     @Min(value = 0, message = "Rating must be at least 1")
     @Max(value = 5, message = "Rating must be at most 5")
     public int rating;
 
-    @NotBlank(message = "Comment cannot be blank!")
     public String comment;
 
     public String image;
 
-    @NotNull
-    public long userId;
-
-    @NotNull
-    public long productId;
-
-    public FeedbackRequest() {
+    public RatingRequest() {
     }
 
-    public FeedbackRequest(int rating, String comment, String image, long userId, long productId) {
+    public RatingRequest(Long orderDetailId, int rating, String comment, String image) {
+        this.orderDetailId = orderDetailId;
         this.rating = rating;
         this.comment = comment;
         this.image = image;
-        this.userId = userId;
-        this.productId = productId;
     }
 
     public int getRating() {
@@ -64,19 +51,11 @@ public class FeedbackRequest {
         this.image = image;
     }
 
-    public long getUserId() {
-        return userId;
+    public Long getOrderDetailId() {
+        return orderDetailId;
     }
 
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    public long getProductId() {
-        return productId;
-    }
-
-    public void setProductId(long productId) {
-        this.productId = productId;
+    public void setOrderDetailId(Long orderDetailId) {
+        this.orderDetailId = orderDetailId;
     }
 }

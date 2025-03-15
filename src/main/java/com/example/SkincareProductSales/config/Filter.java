@@ -38,8 +38,8 @@ public class Filter extends OncePerRequestFilter {
             "/swagger-resources/**",
             "/api/login",
             "/api/register",
-            "/api/loginGoogle"
-
+            "/api/loginGoogle",
+            "/api/forgot-password"
     );
 
     public boolean checkIsPublicAPI(HttpServletRequest request) {
