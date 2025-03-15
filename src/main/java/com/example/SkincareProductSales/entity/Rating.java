@@ -1,53 +1,46 @@
 package com.example.SkincareProductSales.entity;
 
-import com.example.SkincareProductSales.enums.RatingEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
-public class Feedback {
+public class Rating {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long id;
 
-    @Enumerated(EnumType.STRING)
-    public RatingEnum ratingEnum;
+    int rating;
 
-    @NotBlank(message = "Comment cannot be blank!")
     public String comment;
 
-    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    public Date CommentAt;
-
     public String image;
+
+    public LocalDate commentAt = LocalDate.now();
 
     @JsonIgnore
     public boolean isDeleted = false;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "account_id")
+    @JsonIgnore
     public Account account;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
+    @JsonIgnore
     public Product product;
 
-    public Feedback() {
+    public Rating() {
     }
 
-    public Feedback(long id, RatingEnum ratingEnum, String comment, Date commentAt, String image, boolean isDeleted, Account account, Product product) {
+    public Rating(long id, int rating, String comment, String image, LocalDate commentAt, boolean isDeleted, Account account, Product product) {
         this.id = id;
-        this.ratingEnum = ratingEnum;
+        this.rating = rating;
         this.comment = comment;
-        CommentAt = commentAt;
         this.image = image;
+        this.commentAt = commentAt;
         this.isDeleted = isDeleted;
         this.account = account;
         this.product = product;
@@ -61,12 +54,12 @@ public class Feedback {
         this.id = id;
     }
 
-    public RatingEnum getRatingEnum() {
-        return ratingEnum;
+    public int getRating() {
+        return rating;
     }
 
-    public void setRatingEnum(RatingEnum ratingEnum) {
-        this.ratingEnum = ratingEnum;
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
     public String getComment() {
@@ -77,12 +70,12 @@ public class Feedback {
         this.comment = comment;
     }
 
-    public Date getCommentAt() {
-        return CommentAt;
+    public LocalDate getCommentAt() {
+        return commentAt;
     }
 
-    public void setCommentAt(Date commentAt) {
-        CommentAt = commentAt;
+    public void setCommentAt(LocalDate commentAt) {
+        this.commentAt = commentAt;
     }
 
     public String getImage() {
