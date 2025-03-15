@@ -6,9 +6,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -64,9 +61,13 @@ public class Account implements UserDetails {
     @JoinColumn(name = "skin_id")
     public Skin skin;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     @JsonIgnore
-    public List<Feedback> feedbacks = new ArrayList<>();
+    public List<Rating> ratings = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+//    @JsonIgnore
+//    public List<Report> reports = new ArrayList<>();
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@class")
     @JsonSubTypes({
@@ -91,7 +92,7 @@ public class Account implements UserDetails {
         this.skin = skin;
     }
 
-    public Account(long id, String fullName, String email, String gender, LocalDate dateOfBirth, String address, String password, String phone, RoleEnum roleEnum, List<Order> orders, boolean isActive, Skin skin, List<Feedback> feedbacks) {
+    public Account(long id, String fullName, String email, String gender, LocalDate dateOfBirth, String address, String password, String phone, RoleEnum roleEnum, List<Order> orders, boolean isActive, Skin skin, List<Rating> ratings) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
@@ -104,7 +105,7 @@ public class Account implements UserDetails {
         this.orders = orders;
         this.isActive = isActive;
         this.skin = skin;
-        this.feedbacks = feedbacks;
+        this.ratings = ratings;
     }
 
     public Account() {
@@ -206,12 +207,12 @@ public class Account implements UserDetails {
         isActive = active;
     }
 
-    public List<Feedback> getFeedbacks() {
-        return feedbacks;
+    public List<Rating> getFeedbacks() {
+        return ratings;
     }
 
-    public void setFeedbacks(List<Feedback> feedbacks) {
-        this.feedbacks = feedbacks;
+    public void setFeedbacks(List<Rating> ratings) {
+        this.ratings = ratings;
     }
 
     @Override

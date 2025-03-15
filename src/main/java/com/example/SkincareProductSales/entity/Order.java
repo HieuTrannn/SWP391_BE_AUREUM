@@ -2,6 +2,7 @@ package com.example.SkincareProductSales.entity;
 
 import com.example.SkincareProductSales.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,6 +41,10 @@ public class Order {
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
             @JsonIgnore
     List<OrderDetail> orderDetails = new ArrayList<>();
+
+//    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+//    @JsonIgnore
+//    List<Report> reports = new ArrayList<>();
 
     public long getId() {
         return id;

@@ -3,5 +3,6 @@ package com.example.SkincareProductSales.enums;
 public enum OrderStatus {
     IN_PROCESS,
     PAID,
-    CANCEL
+    COMPLETED,
+    CANCELLED
 }
