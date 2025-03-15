@@ -23,6 +23,14 @@ public class Order {
     public Date createAt;
     public float total;
 
+    public float discountAmount;
+
+    public float finalTotal;
+
+    @ManyToOne
+    @JoinColumn(name = "voucher_id")
+    Voucher voucher;
+
     @ManyToOne
     @JoinColumn(name = "account_id")
     Account account;
@@ -57,7 +65,29 @@ public class Order {
         this.total = total;
     }
 
+    public float getDiscountAmount() {
+        return discountAmount;
+    }
 
+    public void setDiscountAmount(float discountAmount) {
+        this.discountAmount = discountAmount;
+    }
+
+    public float getFinalTotal() {
+        return finalTotal;
+    }
+
+    public void setFinalTotal(float finalTotal) {
+        this.finalTotal = finalTotal;
+    }
+
+    public Voucher getVoucher() {
+        return voucher;
+    }
+
+    public void setVoucher(Voucher voucher) {
+        this.voucher = voucher;
+    }
 
     public Account getAccount() {
         return account;
@@ -78,10 +108,13 @@ public class Order {
     public Order() {
     }
 
-    public Order(long id, Date createAt, float total, Account account, OrderStatus status, List<OrderDetail> orderDetails) {
+    public Order(long id, Date createAt, float total, float discountAmount, float finalTotal, Voucher voucher, Account account, OrderStatus status, List<OrderDetail> orderDetails) {
         this.id = id;
         this.createAt = createAt;
         this.total = total;
+        this.discountAmount = discountAmount;
+        this.finalTotal = finalTotal;
+        this.voucher = voucher;
         this.account = account;
         this.status = status;
         this.orderDetails = orderDetails;
