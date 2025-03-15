@@ -42,12 +42,28 @@ public class Filter extends OncePerRequestFilter {
 
     );
 
-    public boolean checkIsPublicAPI(String uri) {
+    public boolean checkIsPublicAPI(HttpServletRequest request) {
         // uri: /api/register
         // nếu gặp những cái api trong list ở trên => cho phép truy cập lun => true
         AntPathMatcher patchMatch = new AntPathMatcher();
+        String uri = request.getRequestURI();
+        String method = request.getMethod();
+
         // check token => false
-        return AUTH_PERMISSION.stream().anyMatch(pattern -> patchMatch.match(pattern, uri));
+        if(method.equals("GET") && patchMatch.match("/api/product/**", uri)){
+            return true; // public api
+        }
+        if(method.equals("GET") && patchMatch.match("/api/brand/**", uri)){
+            return true; // public api
+        }
+        if(method.equals("GET") && patchMatch.match("/api/ingredient/**", uri)){
+            return true; // public api
+        }
+        if(method.equals("GET") && patchMatch.match("/api/category/**", uri)){
+            return true; // public api
+        }
+
+        return AUTH_PERMISSION.stream().anyMatch(item -> patchMatch.match(item, uri));
     }
 
     @Override
@@ -55,9 +71,9 @@ public class Filter extends OncePerRequestFilter {
 
         // check xem cái api mà người dùng yêu cầu có phải là 1 public api?
 
-        boolean isPublicAPI = checkIsPublicAPI(request.getRequestURI());
+//        boolean isPublicAPI = checkIsPublicAPI(request.getRequestURI());
 
-        if (isPublicAPI) {
+        if (checkIsPublicAPI(request)) {
             filterChain.doFilter(request, response);
         } else {
             String token = getToken(request);

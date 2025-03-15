@@ -29,8 +29,6 @@ public class Order {
 
     public OrderStatus status = OrderStatus.IN_PROCESS;
 
-
-
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
             @JsonIgnore
     List<OrderDetail> orderDetails = new ArrayList<>();
