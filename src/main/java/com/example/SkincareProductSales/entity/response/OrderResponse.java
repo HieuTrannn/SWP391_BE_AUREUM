@@ -13,8 +13,6 @@ import java.util.List;
 public class OrderResponse {
 
     public long id;
-
-
     public Date createAt;
     public float total;
 
