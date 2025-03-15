@@ -1,15 +1,15 @@
 package com.example.SkincareProductSales.service;
 
-import com.example.SkincareProductSales.entity.Account;
-import com.example.SkincareProductSales.entity.Order;
-import com.example.SkincareProductSales.entity.OrderDetail;
-import com.example.SkincareProductSales.entity.Product;
+import com.example.SkincareProductSales.entity.*;
 import com.example.SkincareProductSales.entity.request.OrderDetailRequest;
 import com.example.SkincareProductSales.entity.request.OrderRequest;
+import com.example.SkincareProductSales.enums.DiscountTypeEnum;
 import com.example.SkincareProductSales.enums.OrderStatus;
+import com.example.SkincareProductSales.enums.VoucherStatusEnum;
 import com.example.SkincareProductSales.repository.OrderRepository;
 import com.example.SkincareProductSales.repository.ProductRepository;
 
+import com.example.SkincareProductSales.repository.VoucherRepository;
 import com.example.SkincareProductSales.utils.AccountUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -40,6 +41,9 @@ public class OrderService {
     @Autowired
     AccountUtils accountUtils;
 
+    @Autowired
+    VoucherRepository voucherRepository;
+
 
     public Order updateStatus(OrderStatus status, long id){
         Order order = orderRepository.findOrderById(id);
@@ -47,11 +51,26 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+    public boolean isVoucherValid(Voucher voucher) {
+        if (voucher == null) return false;
+
+        // Kiểm tra hết hạn
+        if (voucher.getExpiryDate().isBefore(LocalDate.now())) {
+            voucher.setVoucherStatusEnum(VoucherStatusEnum.EXPIRED);
+            voucherRepository.save(voucher);
+            return false;
+        }
+
+        // Kiểm tra nếu voucher đã được sử dụng
+        return voucher.getVoucherStatusEnum() == VoucherStatusEnum.ACTIVE;
+    }
+
 
 
     public String create(OrderRequest orderRequest) throws Exception{
 
         float total = 0;
+        float discountAmount = 0; // Số tiền giảm giá từ voucher
 
         List<OrderDetail> orderDetails = new ArrayList<>();
         Order order = modelMapper.map(orderRequest, Order.class);
@@ -74,11 +93,46 @@ public class OrderService {
                 throw new RuntimeException("Product was sold out!!");
             }
 
+            // Kiểm tra & áp dụng voucher nếu có
+            if (orderRequest.getVoucherCode() != null && !orderRequest.getVoucherCode().isEmpty()) {
+                Voucher voucher = voucherRepository.findVoucherByCode(orderRequest.getVoucherCode())
+                        .orElseThrow(() -> new RuntimeException("Invalid voucher code"));
+
+                // Kiểm tra voucher hợp lệ
+                if (!isVoucherValid(voucher)) {
+                    throw new RuntimeException("Voucher is not valid or has expired");
+                }
+
+                // Áp dụng giảm giá
+                if (voucher.getDiscountTypeEnum() == DiscountTypeEnum.PERCENT) {
+                    discountAmount = total * (voucher.getDiscountPrice() / 100);
+                } else {
+                    discountAmount = voucher.getDiscountPrice();
+                }
+
+                // Liên kết voucher với đơn hàng
+                order.setVoucher(voucher);
+            }
+
+            // Tính tổng tiền sau giảm giá
+            float finalTotal = total - discountAmount;
+
+            // Lưu thông tin vào đơn hàng
+
+
+            // **Cập nhật trạng thái voucher thành USED**
+            if (order.getVoucher() != null) {
+                Voucher usedVoucher = order.getVoucher();
+                usedVoucher.setVoucherStatusEnum(VoucherStatusEnum.USED);
+                voucherRepository.save(usedVoucher);
+            }
+            order.setDiscountAmount(order.discountAmount);
+            order.setFinalTotal(finalTotal);
+            order.setOrderDetails(orderDetails);
+            order.setTotal(finalTotal);
         }
 
-        order.setTotal(total);
-        order.setOrderDetails(orderDetails);
-//        order.setOrderDetails(orderDetails);
+
         Order newOrder = orderRepository.save(order);
         return createUrlPayment(newOrder);
     }
