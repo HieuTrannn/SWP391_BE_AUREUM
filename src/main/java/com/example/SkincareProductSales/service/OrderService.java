@@ -64,7 +64,7 @@ public class OrderService {
              if (product.getQuantity() >= orderDetailRequest.getQuantity()){
                 orderDetail.setProduct(product);
                 orderDetail.setQuantity(orderDetailRequest.getQuantity());
-                orderDetail.setPrice(product.getPrice() * orderDetailRequest.getProductId());
+                orderDetail.setPrice(product.getPrice());
                 orderDetail.setOrder(order);
                 orderDetails.add(orderDetail);
                 product.setQuantity(product.getQuantity() - orderDetailRequest.getQuantity());
@@ -91,6 +91,8 @@ public class OrderService {
     public List<Order> getALl(){
         return orderRepository.findAll();
     }
+
+
     public String createUrlPayment(Order order) throws Exception{
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         LocalDateTime createDate = LocalDateTime.now();
