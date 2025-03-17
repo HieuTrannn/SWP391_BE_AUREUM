@@ -48,10 +48,18 @@ public class VoucherService {
     public Voucher updateVoucher(long voucherId, VoucherRequest voucherRequest) {
         Voucher currentVoucher = getVoucherById(voucherId);
 
+        // Kiểm tra nếu là PERCENT thì discountPrice không được lớn hơn 100
+        if (voucherRequest.getDiscountTypeEnum() == DiscountTypeEnum.PERCENT &&
+                voucherRequest.getDiscountPrice() > 100) {
+            throw new IllegalArgumentException("Discount percentage cannot exceed 100%");
+        }
+
         currentVoucher.setCode(voucherRequest.getCode());
         currentVoucher.setDiscountPrice(voucherRequest.getDiscountPrice());
         currentVoucher.setMinOrderValue(voucherRequest.getMinOrderValue());
         currentVoucher.setExpiryDate(voucherRequest.getExpiryDate());
+        currentVoucher.setDiscountTypeEnum(voucherRequest.getDiscountTypeEnum()); // Cập nhật discount type
+        currentVoucher.setVoucherStatusEnum(voucherRequest.getVoucherStatusEnum()); // Cập nhật status
 
         return voucherRepository.save(currentVoucher);
     }
