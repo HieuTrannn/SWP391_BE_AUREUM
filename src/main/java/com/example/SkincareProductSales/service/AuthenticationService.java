@@ -135,7 +135,7 @@ public class AuthenticationService implements UserDetailsService {
         emailDetail.setMsgBody("aaa");
         emailDetail.setButtonValue("Reset Password"); // giá trị của button trong form email
         emailDetail.setFullName(account.getFullName());
-        emailDetail.setLink("http://localhost:5173?token=" + tokenService.GenerateToken(account));
+        emailDetail.setLink("http://localhost:5173/resetPassword?token=" + tokenService.GenerateToken(account));
 
         // successfully trước rồi gửi mail sau
         Runnable r = new Runnable() {
