@@ -4,7 +4,9 @@ import com.example.SkincareProductSales.enums.DiscountTypeEnum;
 import com.example.SkincareProductSales.enums.VoucherStatusEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -33,6 +35,8 @@ public class Voucher {
     @Column(nullable = false)
     public VoucherStatusEnum voucherStatusEnum; // ACTIVE, EXPIRED, USED
 
+    @Future(message = "Expiry date must be in the future")
+    @NotNull(message = "Expiry date cannot be null")
     public LocalDate expiryDate;  // Ngày hết hạn
 
     public LocalDate createdAt = LocalDate.now();  // Ngày tạo voucher (mặc định là ngày hiện tại)
