@@ -70,7 +70,7 @@ public class OrderService {
                 .orElseThrow(() -> new RuntimeException("Order not found with id " + orderId));
 
         // Kiểm tra nếu đơn hàng có thể hủy
-        if (order.getStatus() == OrderStatus.COMPLETED) {
+        if (order.getStatus() == OrderStatus.PAID) {
             throw new RuntimeException("Cannot cancel delivered order");
         }
 

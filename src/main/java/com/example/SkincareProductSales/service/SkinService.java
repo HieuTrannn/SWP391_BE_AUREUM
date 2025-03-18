@@ -28,8 +28,9 @@ public class SkinService {
 
     @Autowired
     UserRepository userRepository;
+
     @Autowired
-    private AnswerRepository answerRepository;
+    AnswerRepository answerRepository;
 
     public Skin createSkin(SkinRequest skinRequest) {
         Skin skin = modelMapper.map(skinRequest, Skin.class);
