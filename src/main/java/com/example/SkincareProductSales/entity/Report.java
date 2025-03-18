@@ -1,5 +1,6 @@
 package com.example.SkincareProductSales.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -17,22 +18,28 @@ public class Report {
 
     public String image;
 
-//    @ManyToOne
-//    @JoinColumn(name = "account_id")
-//    public Account account;
+    @JsonIgnore
+    public boolean isDeleted = false;
 
-//    @ManyToOne
-//    @JoinColumn(name = "order_id")
-//    public Order order;
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    public Account account;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    public Order order;
 
     public Report() {
     }
 
-    public Report(long id, String reason, String description, String image) {
+    public Report(long id, String reason, String description, String image, boolean isDeleted, Account account, Order order) {
         this.id = id;
         this.reason = reason;
         this.description = description;
         this.image = image;
+        this.isDeleted = isDeleted;
+        this.account = account;
+        this.order = order;
     }
 
     public long getId() {
@@ -65,5 +72,29 @@ public class Report {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 }

@@ -65,9 +65,9 @@ public class Account implements UserDetails {
     @JsonIgnore
     public List<Rating> ratings = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
-//    @JsonIgnore
-//    public List<Report> reports = new ArrayList<>();
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    @JsonIgnore
+    public List<Report> reports = new ArrayList<>();
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@class")
     @JsonSubTypes({
@@ -92,7 +92,10 @@ public class Account implements UserDetails {
         this.skin = skin;
     }
 
-    public Account(long id, String fullName, String email, String gender, LocalDate dateOfBirth, String address, String password, String phone, RoleEnum roleEnum, List<Order> orders, boolean isActive, Skin skin, List<Rating> ratings) {
+    public Account() {
+    }
+
+    public Account(long id, String fullName, String email, String gender, LocalDate dateOfBirth, String address, String password, String phone, RoleEnum roleEnum, List<Order> orders, boolean isActive, Skin skin, List<Rating> ratings, List<Report> reports) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
@@ -106,9 +109,7 @@ public class Account implements UserDetails {
         this.isActive = isActive;
         this.skin = skin;
         this.ratings = ratings;
-    }
-
-    public Account() {
+        this.reports = reports;
     }
 
     @Override
@@ -213,6 +214,22 @@ public class Account implements UserDetails {
 
     public void setFeedbacks(List<Rating> ratings) {
         this.ratings = ratings;
+    }
+
+    public List<Rating> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(List<Rating> ratings) {
+        this.ratings = ratings;
+    }
+
+    public List<Report> getReports() {
+        return reports;
+    }
+
+    public void setReports(List<Report> reports) {
+        this.reports = reports;
     }
 
     @Override
