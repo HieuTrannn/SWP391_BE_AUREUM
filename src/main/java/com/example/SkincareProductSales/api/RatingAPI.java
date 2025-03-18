@@ -38,9 +38,21 @@ public class RatingAPI {
         return ResponseEntity.ok(rating);
     }
 
+    @GetMapping("/getAllRatingIsDeleted")
+    public ResponseEntity getAllRatingIsDeleted () {
+        List<Rating> ratings = ratingService.getAllRatingIsDeleted();
+        return ResponseEntity.ok(ratings);
+    }
+
     @PutMapping("{id}")
     public ResponseEntity updateRating (@PathVariable long id, @Valid @RequestBody RatingRequest ratingRequest) {
         Rating updateRating = ratingService.updateRating(id, ratingRequest);
         return ResponseEntity.ok(updateRating);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity deleteRating (@PathVariable long id) {
+        Rating deleteRating = ratingService.deleteRating(id);
+        return ResponseEntity.ok(deleteRating);
     }
 }

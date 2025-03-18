@@ -5,6 +5,7 @@ import com.example.SkincareProductSales.entity.OrderDetail;
 import com.example.SkincareProductSales.entity.Rating;
 import com.example.SkincareProductSales.entity.request.RatingRequest;
 import com.example.SkincareProductSales.enums.OrderStatus;
+import com.example.SkincareProductSales.exception.exceptions.BusinessLogicException;
 import com.example.SkincareProductSales.repository.OrderDetailRepository;
 import com.example.SkincareProductSales.repository.RatingRepository;
 import com.example.SkincareProductSales.utils.AccountUtils;
@@ -26,15 +27,15 @@ public class RatingService {
     @Autowired
     AccountUtils accountUtils;
 
-    public Rating createRating (RatingRequest ratingRequest) {
-        OrderDetail orderDetail = orderDetailRepository.findById(ratingRequest.getOrderDetailId())
-                .orElseThrow(() -> new EntityNotFoundException("OrderDetail not found"));
+    public Rating createRating (RatingRequest ratingRequest){
+        OrderDetail orderDetail = orderDetailRepository.findOrderDetailById(ratingRequest.getOrderDetailId())
+                .orElseThrow(() -> new BusinessLogicException("Order Detail Not Found"));
 
         // check xem order này đã thành công chưa
         // nếu đơn đã thành cong rồi thì mới rating
         // chưa thì báo lỗi
         if(!OrderStatus.PAID.equals(orderDetail.getOrder().getStatus())) {
-            throw new EntityNotFoundException("Order not completed so you cannot create a rating");
+            throw new BusinessLogicException("Order not completed so you cannot create a rating");
         }
 
         Account account = accountUtils.getCurrentAccount();
@@ -44,7 +45,7 @@ public class RatingService {
         // nếu chưa thì tạo mới rating
         orderDetail.getProduct().getRatings().stream().forEach(rating -> {
             if (rating.getAccount().getId() == account.getId()) {
-                throw new EntityNotFoundException("Product rating already exists");
+                throw new BusinessLogicException("Product rating already exists");
             }
         });
 
@@ -58,24 +59,24 @@ public class RatingService {
         return ratingRepository.save(rating);
     }
 
-    public Rating getRatingById (long feedbackId) {
-        Rating rating = ratingRepository.findRatingById(feedbackId);
+    public Rating getRatingById (long ratingId) {
+        Rating rating = ratingRepository.findRatingById(ratingId).orElseThrow();
         if(rating == null){
-            throw new EntityNotFoundException("Feedback not found!");
+            throw new EntityNotFoundException("Rating not found!");
         }
-        return ratingRepository.save(rating);
+        return rating;
     }
 
     public List<Rating> getAllRating () {
         return ratingRepository.findRatingByIsDeletedFalse();
     }
 
-    public List<Rating> getAllFeedbackIsDeleted () {
+    public List<Rating> getAllRatingIsDeleted () {
         return ratingRepository.findRatingByIsDeletedTrue();
     }
 
-    public Rating updateRating(long feedbackId, RatingRequest ratingRequest){
-        Rating currentRating = getRatingById(feedbackId);
+    public Rating updateRating(long ratingId, RatingRequest ratingRequest){
+        Rating currentRating = getRatingById(ratingId);
 
         currentRating.setRating(ratingRequest.getRating());
         currentRating.setComment(ratingRequest.getComment());
@@ -84,4 +85,14 @@ public class RatingService {
         return ratingRepository.save(currentRating);
     }
 
+    public Rating deleteRating(long ratingId) {
+        Rating currentRating = ratingRepository.findRatingById(ratingId).orElseThrow();
+
+        if(currentRating == null){
+            throw new EntityNotFoundException("Rating not found!");
+        }
+
+        currentRating.setDeleted(true);
+        return ratingRepository.save(currentRating);
+    }
 }
