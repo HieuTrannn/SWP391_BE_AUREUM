@@ -41,9 +41,9 @@ public class Order {
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
     List<OrderDetail> orderDetails = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-//    @JsonIgnore
-//    List<Report> reports = new ArrayList<>();
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @JsonIgnore
+    List<Report> reports = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -112,7 +112,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(long id, Date createAt, float total, float discountAmount, float finalTotal, Voucher voucher, Account account, OrderStatus status, List<OrderDetail> orderDetails) {
+    public Order(long id, Date createAt, float total, float discountAmount, float finalTotal, Voucher voucher, Account account, OrderStatus status, List<OrderDetail> orderDetails, List<Report> reports) {
         this.id = id;
         this.createAt = createAt;
         this.total = total;
@@ -122,6 +122,7 @@ public class Order {
         this.account = account;
         this.status = status;
         this.orderDetails = orderDetails;
+        this.reports = reports;
     }
 
     public OrderStatus getStatus() {
@@ -130,5 +131,13 @@ public class Order {
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public List<Report> getReports() {
+        return reports;
+    }
+
+    public void setReports(List<Report> reports) {
+        this.reports = reports;
     }
 }

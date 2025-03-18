@@ -46,7 +46,7 @@ public class OrderService {
 
 
     public Order updateStatus(OrderStatus status, long id){
-        Order order = orderRepository.findOrderById(id);
+        Order order = orderRepository.findOrderById(id).orElseThrow();
         order.setStatus(status);
         return orderRepository.save(order);
     }
@@ -63,6 +63,20 @@ public class OrderService {
 
         // Kiểm tra nếu voucher đã được sử dụng
         return voucher.getVoucherStatusEnum() == VoucherStatusEnum.ACTIVE;
+    }
+
+    public Order cancelOrder(long orderId) {
+        Order order = orderRepository.findOrderById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with id " + orderId));
+
+        // Kiểm tra nếu đơn hàng có thể hủy
+        if (order.getStatus() == OrderStatus.COMPLETED) {
+            throw new RuntimeException("Cannot cancel delivered order");
+        }
+
+        order.setStatus(OrderStatus.CANCELLED);
+        return orderRepository.save(order);
+
     }
 
 
