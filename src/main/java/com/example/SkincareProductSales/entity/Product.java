@@ -1,6 +1,8 @@
 package com.example.SkincareProductSales.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -65,6 +67,7 @@ public class Product {
     List<OrderDetail> orderDetails = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+            @JsonManagedReference
     public List<Rating> ratings = new ArrayList<>();
 
     public Product() {
@@ -76,7 +79,7 @@ public class Product {
         this.description = description;
         this.quantity = quantity;
         this.price = price;
-        this.image = image;
+        this.image = image; 
         this.code = code;
         this.isDeleted = isDeleted;
         this.category = category;

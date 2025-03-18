@@ -5,6 +5,7 @@ import com.example.SkincareProductSales.entity.Product;
 import com.example.SkincareProductSales.entity.Skin;
 import com.example.SkincareProductSales.entity.request.ProductRequest;
 import com.example.SkincareProductSales.entity.request.SkinRequest;
+import com.example.SkincareProductSales.entity.request.UserSkinTestRequest;
 import com.example.SkincareProductSales.service.SkinService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -57,5 +58,11 @@ public class SkinAPI {
     public ResponseEntity deleteSkin(@PathVariable long id){
         Skin skin = skinService.deleteSkin(id);
         return ResponseEntity.ok(skin);
+    }
+
+    @PostMapping("/submit")
+    public ResponseEntity submitSkinTest(@RequestBody UserSkinTestRequest userSkinTestRequest) {
+        Skin result = skinService.determineSkinType(userSkinTestRequest);
+        return ResponseEntity.ok(result);
     }
 }

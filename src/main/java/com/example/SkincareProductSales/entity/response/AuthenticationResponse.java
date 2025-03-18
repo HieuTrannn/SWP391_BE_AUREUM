@@ -1,9 +1,12 @@
 package com.example.SkincareProductSales.entity.response;
 
+import com.example.SkincareProductSales.entity.Skin;
 import com.example.SkincareProductSales.enums.RoleEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 public class AuthenticationResponse {
     public long id;
@@ -14,6 +17,10 @@ public class AuthenticationResponse {
     @Enumerated(value = EnumType.STRING)
     public RoleEnum roleEnum;
 
+    @ManyToOne
+    @JoinColumn(name = "skin_id")
+    public Skin skin;
+
     public String token;
 
     @JsonIgnore
@@ -22,12 +29,13 @@ public class AuthenticationResponse {
     public AuthenticationResponse() {
     }
 
-    public AuthenticationResponse(long id, String fullName, String email, String phone, RoleEnum roleEnum, String token, boolean isActive) {
+    public AuthenticationResponse(long id, String fullName, String email, String phone, RoleEnum roleEnum, Skin skin, String token, boolean isActive) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
         this.phone = phone;
         this.roleEnum = roleEnum;
+        this.skin = skin;
         this.token = token;
         this.isActive = isActive;
     }
@@ -86,5 +94,13 @@ public class AuthenticationResponse {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public Skin getSkin() {
+        return skin;
+    }
+
+    public void setSkin(Skin skin) {
+        this.skin = skin;
     }
 }

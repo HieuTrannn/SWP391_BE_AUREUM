@@ -80,6 +80,7 @@ public class AuthenticationService implements UserDetailsService {
             authenticationResponse.setRoleEnum(account.getRoleEnum());
             authenticationResponse.setActive(account.isActive());
             authenticationResponse.setToken(tokenService.GenerateToken(account));
+            authenticationResponse.setSkin(account.getSkin());
             return authenticationResponse;
         } catch (Exception e) {
             throw new RuntimeException("invalid Login");
@@ -117,6 +118,7 @@ public class AuthenticationService implements UserDetailsService {
             authenticationResponse.setRoleEnum(account.getRoleEnum());
             authenticationResponse.setActive(account.isActive());
             authenticationResponse.setToken(tokenService.GenerateToken(account));
+            authenticationResponse.setSkin(account.getSkin());
             return authenticationResponse;
 
         } catch (FirebaseAuthException e) {

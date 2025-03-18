@@ -4,10 +4,11 @@ import com.example.SkincareProductSales.entity.Rating;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface RatingRepository extends JpaRepository<Rating, Long> {
 
-    public Rating findRatingById(long id);
+    Optional<Rating> findRatingById(long id);
 
     List<Rating> findRatingByIsDeletedFalse();
 

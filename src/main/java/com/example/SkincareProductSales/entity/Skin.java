@@ -27,6 +27,10 @@ public class Skin {
     @JsonIgnore
     public List<Account> accounts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "skin")
+    @JsonIgnore
+    public List<Answer> answers = new ArrayList<>();
+
     public long getId() {
         return id;
     }
@@ -46,12 +50,13 @@ public class Skin {
     public Skin() {
     }
 
-    public Skin(long id, String name, boolean isDeleted, List<Product> products, List<Account> accounts) {
+    public Skin(long id, String name, boolean isDeleted, List<Product> products, List<Account> accounts, List<Answer> answers) {
         this.id = id;
         this.name = name;
         this.isDeleted = isDeleted;
         this.products = products;
         this.accounts = accounts;
+        this.answers = answers;
     }
 
     public boolean isDeleted() {
@@ -76,5 +81,13 @@ public class Skin {
 
     public void setAccounts(List<Account> accounts) {
         this.accounts = accounts;
+    }
+
+    public List<Answer> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
     }
 }
