@@ -26,7 +26,6 @@ public class Rating {
 
     @ManyToOne
     @JoinColumn(name = "account_id")
-    @JsonIgnore
     public Account account;
 
     @ManyToOne

@@ -2,7 +2,9 @@ package com.example.SkincareProductSales.service;
 
 import com.example.SkincareProductSales.entity.Account;
 import com.example.SkincareProductSales.entity.Skin;
+import com.example.SkincareProductSales.entity.request.SkinRequest;
 import com.example.SkincareProductSales.entity.request.UserRequest;
+import com.example.SkincareProductSales.entity.request.UserSkinRequest;
 import com.example.SkincareProductSales.repository.SkinRepository;
 import com.example.SkincareProductSales.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -68,5 +70,15 @@ public class UserService {
         currentUser.setActive(!currentUser.isActive());
 
         return userRepository.save(currentUser);
+    }
+
+    public Account updateUserSkin(long userId, UserSkinRequest userSkinRequest) {
+        Account account = getAccountById(userId);
+
+        Skin skin = skinRepository.findSkinById(userSkinRequest.getSkinId());
+
+        account.setSkin(skin);
+
+        return userRepository.save(account);
     }
 }

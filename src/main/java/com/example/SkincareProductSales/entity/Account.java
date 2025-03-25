@@ -208,14 +208,6 @@ public class Account implements UserDetails {
         isActive = active;
     }
 
-    public List<Rating> getFeedbacks() {
-        return ratings;
-    }
-
-    public void setFeedbacks(List<Rating> ratings) {
-        this.ratings = ratings;
-    }
-
     public List<Rating> getRatings() {
         return ratings;
     }

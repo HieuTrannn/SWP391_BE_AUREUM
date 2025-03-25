@@ -43,18 +43,18 @@ public class RatingService {
         // check xem user đã rating product chưa
         // nếu rồi thì báo lỗi
         // nếu chưa thì tạo mới rating
-        orderDetail.getProduct().getRatings().stream().forEach(rating -> {
-            if (rating.getAccount().getId() == account.getId()) {
-                throw new BusinessLogicException("Product rating already exists");
-            }
-        });
+        if(orderDetail.isRated()) {
+            throw new BusinessLogicException("Product already Rated!");
+        }
+        orderDetail.setRated(true);
+        orderDetailRepository.save(orderDetail);
 
         Rating rating = new Rating();
         rating.setAccount(account);
         rating.setRating(ratingRequest.getRating());
         rating.setComment(ratingRequest.getComment());
         rating.setImage(ratingRequest.getImage());
-        rating.setProduct(orderDetail.getProduct());
+            rating.setProduct(orderDetail.getProduct());
 
         return ratingRepository.save(rating);
     }

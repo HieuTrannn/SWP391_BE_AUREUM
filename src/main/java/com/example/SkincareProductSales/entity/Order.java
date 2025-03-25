@@ -2,7 +2,7 @@ package com.example.SkincareProductSales.entity;
 
 import com.example.SkincareProductSales.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,10 +40,6 @@ public class Order {
 
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
     List<OrderDetail> orderDetails = new ArrayList<>();
-
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    @JsonIgnore
-    List<Report> reports = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -112,7 +108,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(long id, Date createAt, float total, float discountAmount, float finalTotal, Voucher voucher, Account account, OrderStatus status, List<OrderDetail> orderDetails, List<Report> reports) {
+    public Order(long id, Date createAt, float total, float discountAmount, float finalTotal, Voucher voucher, Account account, OrderStatus status, List<OrderDetail> orderDetails) {
         this.id = id;
         this.createAt = createAt;
         this.total = total;
@@ -122,7 +118,6 @@ public class Order {
         this.account = account;
         this.status = status;
         this.orderDetails = orderDetails;
-        this.reports = reports;
     }
 
     public OrderStatus getStatus() {
@@ -133,11 +128,5 @@ public class Order {
         this.status = status;
     }
 
-    public List<Report> getReports() {
-        return reports;
-    }
 
-    public void setReports(List<Report> reports) {
-        this.reports = reports;
-    }
 }

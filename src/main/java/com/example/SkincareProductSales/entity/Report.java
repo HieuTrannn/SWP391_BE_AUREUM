@@ -1,5 +1,6 @@
 package com.example.SkincareProductSales.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -26,20 +27,21 @@ public class Report {
     public Account account;
 
     @ManyToOne
-    @JoinColumn(name = "order_id")
-    public Order order;
+    @JoinColumn(name = "product_id")
+    @JsonBackReference
+    public Product product;
 
     public Report() {
     }
 
-    public Report(long id, String reason, String description, String image, boolean isDeleted, Account account, Order order) {
+    public Report(long id, String reason, String description, String image, boolean isDeleted, Account account, Product product) {
         this.id = id;
         this.reason = reason;
         this.description = description;
         this.image = image;
         this.isDeleted = isDeleted;
         this.account = account;
-        this.order = order;
+        this.product = product;
     }
 
     public long getId() {
@@ -82,12 +84,12 @@ public class Report {
         this.account = account;
     }
 
-    public Order getOrder() {
-        return order;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public boolean isDeleted() {
