@@ -3,7 +3,6 @@ package com.example.SkincareProductSales.api;
 import com.example.SkincareProductSales.entity.Account;
 import com.example.SkincareProductSales.entity.request.*;
 import com.example.SkincareProductSales.entity.response.AuthenticationResponse;
-import com.example.SkincareProductSales.entity.response.UserResponse;
 import com.example.SkincareProductSales.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;

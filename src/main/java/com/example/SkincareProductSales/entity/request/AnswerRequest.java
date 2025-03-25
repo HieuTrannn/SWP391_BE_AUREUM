@@ -6,18 +6,18 @@ public class AnswerRequest {
     public String answerText;
 
     @NotNull
-    public long QuestionId;
+    public long questionId;
 
     @NotNull
-    public long SkinId;
+    public long skinId;
 
     public AnswerRequest() {
     }
 
     public AnswerRequest(String answerText, long questionId, long skinId) {
         this.answerText = answerText;
-        QuestionId = questionId;
-        SkinId = skinId;
+        this.questionId = questionId;
+        this.skinId = skinId;
     }
 
     public String getAnswerText() {
@@ -29,18 +29,18 @@ public class AnswerRequest {
     }
 
     public long getQuestionId() {
-        return QuestionId;
+        return questionId;
     }
 
     public void setQuestionId(long questionId) {
-        QuestionId = questionId;
+        this.questionId = questionId;
     }
 
     public long getSkinId() {
-        return SkinId;
+        return skinId;
     }
 
     public void setSkinId(long skinId) {
-        SkinId = skinId;
+        this.skinId = skinId;
     }
 }

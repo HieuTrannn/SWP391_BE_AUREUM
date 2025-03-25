@@ -70,16 +70,20 @@ public class Product {
             @JsonManagedReference
     public List<Rating> ratings = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+            @JsonManagedReference
+    List<Report> reports = new ArrayList<>();
+
     public Product() {
     }
 
-    public Product(long id, String name, String description, int quantity, float price, String image, String code, boolean isDeleted, Category category, Skin skin, Brand brand, List<Ingredient> ingredient, List<OrderDetail> orderDetails, List<Rating> ratings) {
+    public Product(long id, String name, String description, int quantity, float price, String image, String code, boolean isDeleted, Category category, Skin skin, Brand brand, List<Ingredient> ingredient, List<OrderDetail> orderDetails, List<Rating> ratings, List<Report> reports) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.quantity = quantity;
         this.price = price;
-        this.image = image; 
+        this.image = image;
         this.code = code;
         this.isDeleted = isDeleted;
         this.category = category;
@@ -88,6 +92,7 @@ public class Product {
         this.ingredient = ingredient;
         this.orderDetails = orderDetails;
         this.ratings = ratings;
+        this.reports = reports;
     }
 
     public Skin getSkin() {
@@ -194,19 +199,19 @@ public class Product {
         this.orderDetails = orderDetails;
     }
 
-    public List<Rating> getFeedbacks() {
-        return ratings;
-    }
-
-    public void setFeedbacks(List<Rating> ratings) {
-        this.ratings = ratings;
-    }
-
     public List<Rating> getRatings() {
         return ratings;
     }
 
     public void setRatings(List<Rating> ratings) {
         this.ratings = ratings;
+    }
+
+    public List<Report> getReports() {
+        return reports;
+    }
+
+    public void setReports(List<Report> reports) {
+        this.reports = reports;
     }
 }

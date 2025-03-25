@@ -4,6 +4,7 @@ import com.example.SkincareProductSales.entity.*;
 import com.example.SkincareProductSales.entity.request.ReportRequest;
 import com.example.SkincareProductSales.enums.OrderStatus;
 import com.example.SkincareProductSales.exception.exceptions.BusinessLogicException;
+import com.example.SkincareProductSales.repository.OrderDetailRepository;
 import com.example.SkincareProductSales.repository.OrderRepository;
 import com.example.SkincareProductSales.repository.ReportRepository;
 import com.example.SkincareProductSales.utils.AccountUtils;
@@ -21,19 +22,19 @@ public class ReportService {
     ReportRepository reportRepository;
 
     @Autowired
-    ModelMapper modelMapper;
-
-    @Autowired
-    OrderRepository  orderRepository;
+    OrderDetailRepository orderDetailRepository;
 
     @Autowired
     AccountUtils accountUtils;
 
     public Report createReport(ReportRequest reportRequest) {
-        Order order = orderRepository.findOrderById(reportRequest.getOrderId())
-                .orElseThrow(() -> new BusinessLogicException("Order not found"));
+        OrderDetail orderDetail = orderDetailRepository.findOrderDetailById(reportRequest.getOrderDetailId())
+                .orElseThrow(() -> new BusinessLogicException("Order Detail not found"));
 
-        if(!OrderStatus.PAID.equals(order.getStatus())) {
+        // check xem order này đã thành công chưa
+        // nếu đơn đã thành cong rồi thì mới report
+        // chưa thì báo lỗi
+        if(!OrderStatus.PAID.equals(orderDetail.getOrder().getStatus())) {
             throw new BusinessLogicException("Order not completed so you cannot create a report");
         }
 
@@ -42,24 +43,24 @@ public class ReportService {
         // check xem user đã report order chưa
         // nếu rồi thì báo lỗi
         // nếu chưa thì tạo mới report
-        order.getReports().stream().forEach(report -> {
-            if(report.getAccount().getId() == account.getId()) {
-                throw new BusinessLogicException("Report already exists");
-            }
-        });
+        if(orderDetail.isReported()) {
+            throw new BusinessLogicException("Product already Reported!");
+        }
+        orderDetail.setReported(true);
+        orderDetailRepository.save(orderDetail);
 
         Report report = new Report();
         report.setAccount(account);
         report.setReason(reportRequest.getReason());
         report.setDescription(reportRequest.getDescription());
         report.setImage(reportRequest.getImage());
-        report.setOrder(order);
+        report.setProduct(orderDetail.getProduct());
 
         return reportRepository.save(report);
     }
 
     public Report getReportById (long reportId) {
-        Report report = reportRepository.findReportById(reportId);
+        Report report = reportRepository.findReportById(reportId).orElseThrow();
         if(report == null){
             throw new EntityNotFoundException("Report not found!");
         }
@@ -86,7 +87,8 @@ public class ReportService {
     }
 
     public Report deleteReport(long reportId) {
-        Report currentReport = reportRepository.findReportById(reportId);
+        Report currentReport = reportRepository.findReportById(reportId).orElseThrow();
+
         if(currentReport == null){
             throw new EntityNotFoundException("Report not found");
         }
