@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Report {
@@ -18,6 +20,8 @@ public class Report {
     public String description;
 
     public String image;
+
+    public LocalDate reportAt = LocalDate.now();
 
     @JsonIgnore
     public boolean isDeleted = false;
@@ -34,11 +38,12 @@ public class Report {
     public Report() {
     }
 
-    public Report(long id, String reason, String description, String image, boolean isDeleted, Account account, Product product) {
+    public Report(long id, String reason, String description, String image, LocalDate reportAt, boolean isDeleted, Account account, Product product) {
         this.id = id;
         this.reason = reason;
         this.description = description;
         this.image = image;
+        this.reportAt = reportAt;
         this.isDeleted = isDeleted;
         this.account = account;
         this.product = product;
@@ -90,6 +95,14 @@ public class Report {
 
     public void setProduct(Product product) {
         this.product = product;
+    }
+
+    public LocalDate getReportAt() {
+        return reportAt;
+    }
+
+    public void setReportAt(LocalDate reportAt) {
+        this.reportAt = reportAt;
     }
 
     public boolean isDeleted() {

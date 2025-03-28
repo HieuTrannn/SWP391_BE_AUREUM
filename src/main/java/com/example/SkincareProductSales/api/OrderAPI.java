@@ -15,7 +15,6 @@ import java.util.List;
 @RequestMapping("/api/order")
 @CrossOrigin("*")
 @SecurityRequirement(name = "api")
-
 public class OrderAPI {
     @Autowired
     OrderService orderService;
@@ -45,4 +44,16 @@ public class OrderAPI {
         return ResponseEntity.ok(order);
     }
 
+    // API hủy đơn hàng
+    @PutMapping("/cancel/{orderId}")
+    public ResponseEntity cancelOrder(@PathVariable long orderId) {
+        try {
+            Order order = orderService.cancelOrder(orderId);
+            return ResponseEntity.ok(order);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body("Error: " + e.getMessage());
+        }
+    }
 }
+
+
