@@ -45,7 +45,7 @@ public class OrderService {
     VoucherRepository voucherRepository;
 
 
-    public Order updateStatus(OrderStatus status, long id){
+    public Order updateStatus(OrderStatus status, long id) {
         Order order = orderRepository.findOrderById(id).orElseThrow();
         order.setStatus(status);
         return orderRepository.save(order);
@@ -66,22 +66,30 @@ public class OrderService {
     }
 
     public Order cancelOrder(long orderId) {
+        // Tìm đơn hàng theo id
         Order order = orderRepository.findOrderById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found with id " + orderId));
 
-        // Kiểm tra nếu đơn hàng có thể hủy
-        if (order.getStatus() == OrderStatus.PAID) {
-            throw new RuntimeException("Cannot cancel delivered order");
+        // Kiểm tra nếu đơn hàng có thể hủy (đơn hàng chưa thanh toán, đơn hàng đã thanh toán)
+        if (order.getStatus() == OrderStatus.COMPLETED) {
+            throw new RuntimeException("Cannot cancel a COMPLETED order.");
         }
 
+        // Thay đổi trạng thái đơn hàng thành CANCELLED
         order.setStatus(OrderStatus.CANCELLED);
+
+        // Hoàn trả lại số lượng sản phẩm trong kho
+        for (OrderDetail orderDetail : order.getOrderDetails()) {
+            Product product = orderDetail.getProduct();
+            product.setQuantity(product.getQuantity() + orderDetail.getQuantity());
+            productRepository.save(product);
+        }
+
+        // Lưu lại đơn hàng với trạng thái đã hủy
         return orderRepository.save(order);
-
     }
-
-
-
-    public String create(OrderRequest orderRequest) throws Exception{
+    
+    public String create(OrderRequest orderRequest) throws Exception {
 
         float total = 0;
         float discountAmount = 0; // Số tiền giảm giá từ voucher
@@ -90,11 +98,12 @@ public class OrderService {
         Order order = modelMapper.map(orderRequest, Order.class);
         order.setAccount(accountUtils.getCurrentAccount());
 
-        for (OrderDetailRequest orderDetailRequest: orderRequest.getDetails()){
+        float finalTotal = 0;
+        for (OrderDetailRequest orderDetailRequest : orderRequest.getDetails()) {
             OrderDetail orderDetail = new OrderDetail();
             Product product = productRepository.findProductById(orderDetailRequest.getProductId());
 
-             if (product.getQuantity() >= orderDetailRequest.getQuantity()){
+            if (product.getQuantity() >= orderDetailRequest.getQuantity()) {
                 orderDetail.setProduct(product);
                 orderDetail.setQuantity(orderDetailRequest.getQuantity());
                 orderDetail.setPrice(product.getPrice());
@@ -103,7 +112,7 @@ public class OrderService {
                 product.setQuantity(product.getQuantity() - orderDetailRequest.getQuantity());
                 productRepository.save(product);
                 total += orderDetail.getPrice() * orderDetailRequest.getQuantity();
-            }else {
+            } else {
                 throw new RuntimeException("Product was sold out!!");
             }
 
@@ -129,10 +138,9 @@ public class OrderService {
             }
 
             // Tính tổng tiền sau giảm giá
-            float finalTotal = total - discountAmount;
+            finalTotal = total - discountAmount;
 
             // Lưu thông tin vào đơn hàng
-
 
             // **Cập nhật trạng thái voucher thành USED**
             if (order.getVoucher() != null) {
@@ -145,6 +153,7 @@ public class OrderService {
             order.setOrderDetails(orderDetails);
             order.setTotal(finalTotal);
         }
+
 
 
         Order newOrder = orderRepository.save(order);

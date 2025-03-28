@@ -7,9 +7,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -32,6 +30,7 @@ public class Order {
     @JoinColumn(name = "voucher_id")
     Voucher voucher;
 
+
     @ManyToOne
     @JoinColumn(name = "account_id")
     Account account;
@@ -40,6 +39,21 @@ public class Order {
 
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
     List<OrderDetail> orderDetails = new ArrayList<>();
+
+    public Order() {
+    }
+
+    public Order(long id, Date createAt, float total, float discountAmount, float finalTotal, Voucher voucher, Account account, OrderStatus status, List<OrderDetail> orderDetails) {
+        this.id = id;
+        this.createAt = createAt;
+        this.total = total;
+        this.discountAmount = discountAmount;
+        this.finalTotal = finalTotal;
+        this.voucher = voucher;
+        this.account = account;
+        this.status = status;
+        this.orderDetails = orderDetails;
+    }
 
     public long getId() {
         return id;
@@ -105,21 +119,6 @@ public class Order {
         this.orderDetails = orderDetails;
     }
 
-    public Order() {
-    }
-
-    public Order(long id, Date createAt, float total, float discountAmount, float finalTotal, Voucher voucher, Account account, OrderStatus status, List<OrderDetail> orderDetails) {
-        this.id = id;
-        this.createAt = createAt;
-        this.total = total;
-        this.discountAmount = discountAmount;
-        this.finalTotal = finalTotal;
-        this.voucher = voucher;
-        this.account = account;
-        this.status = status;
-        this.orderDetails = orderDetails;
-    }
-
     public OrderStatus getStatus() {
         return status;
     }
@@ -127,6 +126,5 @@ public class Order {
     public void setStatus(OrderStatus status) {
         this.status = status;
     }
-
 
 }
