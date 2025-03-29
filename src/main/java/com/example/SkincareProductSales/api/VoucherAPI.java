@@ -57,6 +57,12 @@ public class VoucherAPI {
         return ResponseEntity.ok(voucher);
     }
 
+    @PostMapping("/apply")
+    public ResponseEntity applyVoucher(@RequestParam String code, @RequestParam float totalAmount) {
+        float discountedAmount = voucherService.applyVoucher(code, totalAmount);
+        return ResponseEntity.ok(discountedAmount);
+    }
+
     @DeleteMapping("{id}")
     public ResponseEntity deleteVoucher(@PathVariable long id){
         Voucher deleteVoucher = voucherService.deleteVoucher(id);
