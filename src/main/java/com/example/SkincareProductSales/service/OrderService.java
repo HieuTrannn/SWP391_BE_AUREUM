@@ -89,8 +89,78 @@ public class OrderService {
         return orderRepository.save(order);
     }
     
-    public String create(OrderRequest orderRequest) throws Exception {
+//    public String create(OrderRequest orderRequest) throws Exception {
+//
+//        float total = 0;
+//        float discountAmount = 0; // Số tiền giảm giá từ voucher
+//
+//        List<OrderDetail> orderDetails = new ArrayList<>();
+//        Order order = modelMapper.map(orderRequest, Order.class);
+//        order.setAccount(accountUtils.getCurrentAccount());
+//
+//        float finalTotal = 0;
+//        for (OrderDetailRequest orderDetailRequest : orderRequest.getDetails()) {
+//            OrderDetail orderDetail = new OrderDetail();
+//            Product product = productRepository.findProductById(orderDetailRequest.getProductId());
+//
+//            if (product.getQuantity() >= orderDetailRequest.getQuantity()) {
+//                orderDetail.setProduct(product);
+//                orderDetail.setQuantity(orderDetailRequest.getQuantity());
+//                orderDetail.setPrice(product.getPrice());
+//                orderDetail.setOrder(order);
+//                orderDetails.add(orderDetail);
+//                product.setQuantity(product.getQuantity() - orderDetailRequest.getQuantity());
+//                productRepository.save(product);
+//                total += orderDetail.getPrice() * orderDetailRequest.getQuantity();
+//            } else {
+//                throw new RuntimeException("Product was sold out!!");
+//            }
+//
+//            // Kiểm tra & áp dụng voucher nếu có
+//            if (orderRequest.getVoucherCode() != null && !orderRequest.getVoucherCode().isEmpty()) {
+//                Voucher voucher = voucherRepository.findVoucherByCode(orderRequest.getVoucherCode());
+//
+//
+//                // Kiểm tra voucher hợp lệ
+//                if (!isVoucherValid(voucher)) {
+//                    throw new RuntimeException("Voucher is not valid or has expired");
+//                }
+//
+//                // Áp dụng giảm giá
+//                if (voucher.getDiscountTypeEnum() == DiscountTypeEnum.PERCENT) {
+//                    discountAmount = total * (voucher.getDiscountPrice() / 100);
+//                } else {
+//                    discountAmount = voucher.getDiscountPrice();
+//                }
+//
+//                // Liên kết voucher với đơn hàng
+//                order.setVoucher(voucher);
+//            }
+//
+//            // Tính tổng tiền sau giảm giá
+//            finalTotal = total - discountAmount;
+//
+//            // Lưu thông tin vào đơn hàng
+//
+//            // **Cập nhật trạng thái voucher thành USED**
+//            if (order.getVoucher() != null) {
+//                Voucher usedVoucher = order.getVoucher();
+//                usedVoucher.setVoucherStatusEnum(VoucherStatusEnum.USED);
+//                voucherRepository.save(usedVoucher);
+//            }
+//            order.setDiscountAmount(order.discountAmount);
+//            order.setFinalTotal(finalTotal);
+//            order.setOrderDetails(orderDetails);
+//            order.setTotal(finalTotal);
+//        }
+//
+//
+//
+//        Order newOrder = orderRepository.save(order);
+//        return createUrlPayment(newOrder);
+//    }
 
+    public String create(OrderRequest orderRequest) throws Exception {
         float total = 0;
         float discountAmount = 0; // Số tiền giảm giá từ voucher
 
@@ -98,7 +168,6 @@ public class OrderService {
         Order order = modelMapper.map(orderRequest, Order.class);
         order.setAccount(accountUtils.getCurrentAccount());
 
-        float finalTotal = 0;
         for (OrderDetailRequest orderDetailRequest : orderRequest.getDetails()) {
             OrderDetail orderDetail = new OrderDetail();
             Product product = productRepository.findProductById(orderDetailRequest.getProductId());
@@ -115,48 +184,53 @@ public class OrderService {
             } else {
                 throw new RuntimeException("Product was sold out!!");
             }
-
-            // Kiểm tra & áp dụng voucher nếu có
-            if (orderRequest.getVoucherCode() != null && !orderRequest.getVoucherCode().isEmpty()) {
-                Voucher voucher = voucherRepository.findVoucherByCode(orderRequest.getVoucherCode())
-                        .orElseThrow(() -> new RuntimeException("Invalid voucher code"));
-
-                // Kiểm tra voucher hợp lệ
-                if (!isVoucherValid(voucher)) {
-                    throw new RuntimeException("Voucher is not valid or has expired");
-                }
-
-                // Áp dụng giảm giá
-                if (voucher.getDiscountTypeEnum() == DiscountTypeEnum.PERCENT) {
-                    discountAmount = total * (voucher.getDiscountPrice() / 100);
-                } else {
-                    discountAmount = voucher.getDiscountPrice();
-                }
-
-                // Liên kết voucher với đơn hàng
-                order.setVoucher(voucher);
-            }
-
-            // Tính tổng tiền sau giảm giá
-            finalTotal = total - discountAmount;
-
-            // Lưu thông tin vào đơn hàng
-
-            // **Cập nhật trạng thái voucher thành USED**
-            if (order.getVoucher() != null) {
-                Voucher usedVoucher = order.getVoucher();
-                usedVoucher.setVoucherStatusEnum(VoucherStatusEnum.USED);
-                voucherRepository.save(usedVoucher);
-            }
-            order.setDiscountAmount(order.discountAmount);
-            order.setFinalTotal(finalTotal);
-            order.setOrderDetails(orderDetails);
-            order.setTotal(finalTotal);
         }
 
+        // Kiểm tra & áp dụng voucher nếu có
+        // Kiểm tra nếu có voucher
+        if (orderRequest.getVoucherCode() != null && !orderRequest.getVoucherCode().isEmpty()) {
+            Voucher voucher = voucherRepository.findVoucherByCode(orderRequest.getVoucherCode());
 
+            if (voucher == null) {
+                throw new RuntimeException("Voucher không tồn tại!");
+            }
+
+            System.out.println("Voucher tìm thấy: " + voucher.getCode());
+            System.out.println("Trạng thái voucher: " + voucher.getVoucherStatusEnum());
+            System.out.println("Loại giảm giá: " + voucher.getDiscountTypeEnum());
+            System.out.println("Giá trị giảm giá: " + voucher.getDiscountPrice());
+
+            if (!isVoucherValid(voucher)) {
+                throw new RuntimeException("Voucher không hợp lệ hoặc đã hết hạn");
+            }
+
+            if (voucher.getDiscountTypeEnum() == DiscountTypeEnum.PERCENT) {
+                discountAmount = total * (voucher.getDiscountPrice() / 100.0f);
+            } else {
+                discountAmount = Math.min(voucher.getDiscountPrice(), total);
+            }
+
+            System.out.println("Discount Amount tính toán: " + discountAmount);
+
+            order.setVoucher(voucher);
+            voucher.setVoucherStatusEnum(VoucherStatusEnum.USED);
+            voucherRepository.save(voucher);
+        }
+
+        float finalTotal = Math.max(total - discountAmount, 0);
+
+        // Lưu tổng tiền vào order
+        order.setDiscountAmount(discountAmount);
+        order.setFinalTotal(finalTotal);
+        order.setOrderDetails(orderDetails);
+        order.setTotal(total);
 
         Order newOrder = orderRepository.save(order);
+
+        System.out.println("Total before discount: " + total);
+        System.out.println("Discount amount: " + discountAmount);
+        System.out.println("Final Total (after discount): " + finalTotal);
+
         return createUrlPayment(newOrder);
     }
 
@@ -191,7 +265,7 @@ public class OrderService {
         vnpParams.put("vnp_TxnRef", orderId);
         vnpParams.put("vnp_OrderInfo", "Thanh toan cho ma GD: " + orderId);
         vnpParams.put("vnp_OrderType", "other");
-        vnpParams.put("vnp_Amount",(int) order.getTotal() + "00");
+        vnpParams.put("vnp_Amount", String.valueOf((int) (order.getFinalTotal() * 100)));
         vnpParams.put("vnp_ReturnUrl", returnUrl);
         vnpParams.put("vnp_CreateDate", formattedCreateDate);
         vnpParams.put("vnp_IpAddr", "167.99.74.201");
