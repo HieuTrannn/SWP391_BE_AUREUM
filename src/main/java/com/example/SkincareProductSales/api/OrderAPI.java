@@ -46,7 +46,7 @@ public class OrderAPI {
 
     // API hủy đơn hàng
     @PutMapping("/cancel/{orderId}")
-    public ResponseEntity cancelOrder(@PathVariable long orderId) {
+    public ResponseEntity cancelOrder(@PathVariable long orderId, @PathVariable OrderStatus status) {
         try {
             Order order = orderService.cancelOrder(orderId);
             return ResponseEntity.ok(order);
