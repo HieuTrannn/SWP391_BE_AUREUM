@@ -3,6 +3,7 @@ package com.example.SkincareProductSales.entity;
 import com.example.SkincareProductSales.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,10 +27,11 @@ public class Order {
 
     public float finalTotal;
 
+    public boolean isReported = false;
+
     @ManyToOne
     @JoinColumn(name = "voucher_id")
     Voucher voucher;
-
 
     @ManyToOne
     @JoinColumn(name = "account_id")
@@ -38,21 +40,27 @@ public class Order {
     public OrderStatus status = OrderStatus.IN_PROCESS;
 
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
-    List<OrderDetail> orderDetails = new ArrayList<>();
+    public List<OrderDetail> orderDetails = new ArrayList<>();
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @JsonIgnore
+    public List<Report> reports = new ArrayList<>();
 
     public Order() {
     }
 
-    public Order(long id, Date createAt, float total, float discountAmount, float finalTotal, Voucher voucher, Account account, OrderStatus status, List<OrderDetail> orderDetails) {
+    public Order(long id, Date createAt, float total, float discountAmount, float finalTotal, boolean isReported, Voucher voucher, Account account, OrderStatus status, List<OrderDetail> orderDetails, List<Report> reports) {
         this.id = id;
         this.createAt = createAt;
         this.total = total;
         this.discountAmount = discountAmount;
         this.finalTotal = finalTotal;
+        this.isReported = isReported;
         this.voucher = voucher;
         this.account = account;
         this.status = status;
         this.orderDetails = orderDetails;
+        this.reports = reports;
     }
 
     public long getId() {
@@ -127,4 +135,19 @@ public class Order {
         this.status = status;
     }
 
+    public List<Report> getReports() {
+        return reports;
+    }
+
+    public void setReports(List<Report> reports) {
+        this.reports = reports;
+    }
+
+    public boolean isReported() {
+        return isReported;
+    }
+
+    public void setReported(boolean reported) {
+        isReported = reported;
+    }
 }

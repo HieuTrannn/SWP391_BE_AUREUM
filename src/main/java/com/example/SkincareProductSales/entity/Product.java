@@ -70,14 +70,10 @@ public class Product {
             @JsonManagedReference
     public List<Rating> ratings = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-            @JsonManagedReference
-    List<Report> reports = new ArrayList<>();
-
     public Product() {
     }
 
-    public Product(long id, String name, String description, int quantity, float price, String image, String code, boolean isDeleted, Category category, Skin skin, Brand brand, List<Ingredient> ingredient, List<OrderDetail> orderDetails, List<Rating> ratings, List<Report> reports) {
+    public Product(long id, String name, String description, int quantity, float price, String image, String code, boolean isDeleted, Category category, Skin skin, Brand brand, List<Ingredient> ingredient, List<OrderDetail> orderDetails, List<Rating> ratings) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -92,7 +88,6 @@ public class Product {
         this.ingredient = ingredient;
         this.orderDetails = orderDetails;
         this.ratings = ratings;
-        this.reports = reports;
     }
 
     public Skin getSkin() {
@@ -207,11 +202,5 @@ public class Product {
         this.ratings = ratings;
     }
 
-    public List<Report> getReports() {
-        return reports;
-    }
 
-    public void setReports(List<Report> reports) {
-        this.reports = reports;
-    }
 }

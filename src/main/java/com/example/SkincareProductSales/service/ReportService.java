@@ -25,17 +25,24 @@ public class ReportService {
     OrderDetailRepository orderDetailRepository;
 
     @Autowired
+    OrderRepository orderRepository;
+
+    @Autowired
     AccountUtils accountUtils;
 
     public Report createReport(ReportRequest reportRequest) {
-        OrderDetail orderDetail = orderDetailRepository.findOrderDetailById(reportRequest.getOrderDetailId())
-                .orElseThrow(() -> new BusinessLogicException("Order Detail not found"));
+        Order order = orderRepository.findOrderById(reportRequest.getOrderId())
+                .orElseThrow(() -> new BusinessLogicException("Order not found"));
 
         // check xem order này đã thành công chưa
         // nếu đơn đã thành cong rồi thì mới report
         // chưa thì báo lỗi
-        if(!OrderStatus.PAID.equals(orderDetail.getOrder().getStatus())) {
-            throw new BusinessLogicException("Order not completed so you cannot create a report");
+        if(OrderStatus.IN_PROCESS.equals(order.getStatus())) {
+            throw new BusinessLogicException("Cannot report a in-process order");
+        }
+
+        if(OrderStatus.CANCELLED.equals(order.getStatus())) {
+            throw new BusinessLogicException("Cannot report a cancelled order");
         }
 
         Account account = accountUtils.getCurrentAccount();
@@ -43,18 +50,18 @@ public class ReportService {
         // check xem user đã report order chưa
         // nếu rồi thì báo lỗi
         // nếu chưa thì tạo mới report
-        if(orderDetail.isReported()) {
+        if(order.isReported()) {
             throw new BusinessLogicException("Product already Reported!");
         }
-        orderDetail.setReported(true);
-        orderDetailRepository.save(orderDetail);
+        order.setReported(true);
+        orderRepository.save(order);
 
         Report report = new Report();
         report.setAccount(account);
         report.setReason(reportRequest.getReason());
         report.setDescription(reportRequest.getDescription());
         report.setImage(reportRequest.getImage());
-        report.setProduct(orderDetail.getProduct());
+        report.setOrder(order);
 
         return reportRepository.save(report);
     }

@@ -28,17 +28,17 @@ public class Report {
 
     @ManyToOne
     @JoinColumn(name = "account_id")
+    @JsonIgnore
     public Account account;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    @JsonBackReference
-    public Product product;
+    @JoinColumn(name = "order_id")
+    public Order order;
 
     public Report() {
     }
 
-    public Report(long id, String reason, String description, String image, LocalDate reportAt, boolean isDeleted, Account account, Product product) {
+    public Report(long id, String reason, String description, String image, LocalDate reportAt, boolean isDeleted, Account account, Order order) {
         this.id = id;
         this.reason = reason;
         this.description = description;
@@ -46,7 +46,7 @@ public class Report {
         this.reportAt = reportAt;
         this.isDeleted = isDeleted;
         this.account = account;
-        this.product = product;
+        this.order = order;
     }
 
     public long getId() {
@@ -89,12 +89,12 @@ public class Report {
         this.account = account;
     }
 
-    public Product getProduct() {
-        return product;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
     public LocalDate getReportAt() {

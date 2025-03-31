@@ -34,7 +34,7 @@ public class RatingService {
         // check xem order này đã thành công chưa
         // nếu đơn đã thành cong rồi thì mới rating
         // chưa thì báo lỗi
-        if(!OrderStatus.PAID.equals(orderDetail.getOrder().getStatus())) {
+        if(!OrderStatus.COMPLETED.equals(orderDetail.getOrder().getStatus())) {
             throw new BusinessLogicException("Order not completed so you cannot create a rating");
         }
 

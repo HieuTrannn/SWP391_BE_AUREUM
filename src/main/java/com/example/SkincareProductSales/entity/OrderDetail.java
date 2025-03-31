@@ -17,8 +17,6 @@ public class OrderDetail {
 
     public boolean isRated = false;
 
-    public boolean isReported = false;
-
     @ManyToOne
     @JoinColumn(name = "order_id")
     @JsonIgnore
@@ -31,12 +29,11 @@ public class OrderDetail {
     public OrderDetail() {
     }
 
-    public OrderDetail(long id, int quantity, float price, boolean isRated, boolean isReported, Order order, Product product) {
+    public OrderDetail(long id, int quantity, float price, boolean isRated, Order order, Product product) {
         this.id = id;
         this.quantity = quantity;
         this.price = price;
         this.isRated = isRated;
-        this.isReported = isReported;
         this.order = order;
         this.product = product;
     }
@@ -87,13 +84,5 @@ public class OrderDetail {
 
     public void setRated(boolean rated) {
         isRated = rated;
-    }
-
-    public boolean isReported() {
-        return isReported;
-    }
-
-    public void setReported(boolean reported) {
-        isReported = reported;
     }
 }

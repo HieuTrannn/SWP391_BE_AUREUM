@@ -37,9 +37,6 @@ public class Account implements UserDetails {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     public LocalDate dateOfBirth;
 
-//    @NotBlank(message = "Address cannot be blank!")
-    public String address;
-
     @Size(min = 6, message = "Password must be exceed 6 characters")
     public String password;
 
@@ -95,13 +92,12 @@ public class Account implements UserDetails {
     public Account() {
     }
 
-    public Account(long id, String fullName, String email, String gender, LocalDate dateOfBirth, String address, String password, String phone, RoleEnum roleEnum, List<Order> orders, boolean isActive, Skin skin, List<Rating> ratings, List<Report> reports) {
+    public Account(long id, String fullName, String email, String gender, LocalDate dateOfBirth, String password, String phone, RoleEnum roleEnum, List<Order> orders, boolean isActive, Skin skin, List<Rating> ratings, List<Report> reports) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
-        this.address = address;
         this.password = password;
         this.phone = phone;
         this.roleEnum = roleEnum;
@@ -157,22 +153,12 @@ public class Account implements UserDetails {
         this.email = email;
     }
 
-
     public void setGender(String gender) {
         this.gender = gender;
     }
 
-
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     @Override
