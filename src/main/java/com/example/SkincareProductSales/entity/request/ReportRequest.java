@@ -1,7 +1,7 @@
 package com.example.SkincareProductSales.entity.request;
 
 public class ReportRequest {
-    public long orderDetailId;
+    public long orderId;
 
     public String reason;
 
@@ -12,8 +12,8 @@ public class ReportRequest {
     public ReportRequest() {
     }
 
-    public ReportRequest(long orderDetailId, String reason, String description, String image) {
-        this.orderDetailId = orderDetailId;
+    public ReportRequest(long orderId, String reason, String description, String image) {
+        this.orderId = orderId;
         this.reason = reason;
         this.description = description;
         this.image = image;
@@ -43,11 +43,11 @@ public class ReportRequest {
         this.image = image;
     }
 
-    public long getOrderDetailId() {
-        return orderDetailId;
+    public long getOrderId() {
+        return orderId;
     }
 
-    public void setOrderDetailId(long orderDetailId) {
-        this.orderDetailId = orderDetailId;
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
     }
 }

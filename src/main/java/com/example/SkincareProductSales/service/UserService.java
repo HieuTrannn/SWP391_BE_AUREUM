@@ -41,7 +41,6 @@ public class UserService {
        currentUser.setPhone(userRequest.getPhone());
        currentUser.setGender(userRequest.getGender());
        currentUser.setDateOfBirth(userRequest.getDateOfBirth());
-       currentUser.setAddress(userRequest.getAddress());
 
         // Lấy đối tượng Skin từ skinId trong userRequest
         Skin skin = skinRepository.findSkinById(userRequest.getSkinId());

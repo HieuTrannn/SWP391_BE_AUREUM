@@ -70,9 +70,13 @@ public class OrderService {
         Order order = orderRepository.findOrderById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found with id " + orderId));
 
-        // Kiểm tra nếu đơn hàng có thể hủy (đơn hàng chưa thanh toán, đơn hàng đã thanh toán)
+        // Kiểm tra nếu đơn hàng có thể hủy (đơn hàng chưa thanh toán)
         if (order.getStatus() == OrderStatus.COMPLETED) {
             throw new RuntimeException("Cannot cancel a COMPLETED order.");
+        }
+
+        if (order.getStatus() == OrderStatus.PAID) {
+            throw new RuntimeException("Cannot cancel a PAID order.");
         }
 
         // Thay đổi trạng thái đơn hàng thành CANCELLED
@@ -88,77 +92,55 @@ public class OrderService {
         // Lưu lại đơn hàng với trạng thái đã hủy
         return orderRepository.save(order);
     }
-    
-//    public String create(OrderRequest orderRequest) throws Exception {
-//
-//        float total = 0;
-//        float discountAmount = 0; // Số tiền giảm giá từ voucher
-//
-//        List<OrderDetail> orderDetails = new ArrayList<>();
-//        Order order = modelMapper.map(orderRequest, Order.class);
-//        order.setAccount(accountUtils.getCurrentAccount());
-//
-//        float finalTotal = 0;
-//        for (OrderDetailRequest orderDetailRequest : orderRequest.getDetails()) {
-//            OrderDetail orderDetail = new OrderDetail();
-//            Product product = productRepository.findProductById(orderDetailRequest.getProductId());
-//
-//            if (product.getQuantity() >= orderDetailRequest.getQuantity()) {
-//                orderDetail.setProduct(product);
-//                orderDetail.setQuantity(orderDetailRequest.getQuantity());
-//                orderDetail.setPrice(product.getPrice());
-//                orderDetail.setOrder(order);
-//                orderDetails.add(orderDetail);
-//                product.setQuantity(product.getQuantity() - orderDetailRequest.getQuantity());
-//                productRepository.save(product);
-//                total += orderDetail.getPrice() * orderDetailRequest.getQuantity();
-//            } else {
-//                throw new RuntimeException("Product was sold out!!");
-//            }
-//
-//            // Kiểm tra & áp dụng voucher nếu có
-//            if (orderRequest.getVoucherCode() != null && !orderRequest.getVoucherCode().isEmpty()) {
-//                Voucher voucher = voucherRepository.findVoucherByCode(orderRequest.getVoucherCode());
-//
-//
-//                // Kiểm tra voucher hợp lệ
-//                if (!isVoucherValid(voucher)) {
-//                    throw new RuntimeException("Voucher is not valid or has expired");
-//                }
-//
-//                // Áp dụng giảm giá
-//                if (voucher.getDiscountTypeEnum() == DiscountTypeEnum.PERCENT) {
-//                    discountAmount = total * (voucher.getDiscountPrice() / 100);
-//                } else {
-//                    discountAmount = voucher.getDiscountPrice();
-//                }
-//
-//                // Liên kết voucher với đơn hàng
-//                order.setVoucher(voucher);
-//            }
-//
-//            // Tính tổng tiền sau giảm giá
-//            finalTotal = total - discountAmount;
-//
-//            // Lưu thông tin vào đơn hàng
-//
-//            // **Cập nhật trạng thái voucher thành USED**
-//            if (order.getVoucher() != null) {
-//                Voucher usedVoucher = order.getVoucher();
-//                usedVoucher.setVoucherStatusEnum(VoucherStatusEnum.USED);
-//                voucherRepository.save(usedVoucher);
-//            }
-//            order.setDiscountAmount(order.discountAmount);
-//            order.setFinalTotal(finalTotal);
-//            order.setOrderDetails(orderDetails);
-//            order.setTotal(finalTotal);
-//        }
-//
-//
-//
-//        Order newOrder = orderRepository.save(order);
-//        return createUrlPayment(newOrder);
-//    }
+
+    public Order refundOrder(long orderId) {
+        // Tìm đơn hàng theo id
+        Order order = orderRepository.findOrderById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with id " + orderId));
+
+        // Kiểm tra nếu đơn hàng có thể hủy (đơn hàng đã thanh toán, đơn hàng đã hoàn thành)
+        if (order.getStatus() == OrderStatus.IN_PROCESS ) {
+            throw new RuntimeException("Cannot refund a IN_PROCESS order.");
+        }
+
+        if (order.getStatus() == OrderStatus.CANCELLED ) {
+            throw new RuntimeException("Cannot refund a CANCELLED order.");
+        }
+
+        // Thay đổi trạng thái đơn hàng thành REFUNDED
+        order.setStatus(OrderStatus.REFUNDED);
+
+        // Hoàn trả lại số lượng sản phẩm trong kho
+        for (OrderDetail orderDetail : order.getOrderDetails()) {
+            Product product = orderDetail.getProduct();
+            product.setQuantity(product.getQuantity() + orderDetail.getQuantity());
+            productRepository.save(product);
+        }
+
+        // Lưu lại đơn hàng với trạng thái đã hủy
+        return orderRepository.save(order);
+    }
+
+    public Order completedOrder(long orderId) {
+        // Tìm đơn hàng theo id
+        Order order = orderRepository.findOrderById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with id " + orderId));
+
+        // Kiểm tra nếu đơn hàng có thể hoàn thành (đơn hàng đã thanh toán)
+        if (order.getStatus() == OrderStatus.IN_PROCESS) {
+            throw new RuntimeException("Cannot completed a IN_PROCESS order.");
+        }
+
+        if (order.getStatus() == OrderStatus.CANCELLED) {
+            throw new RuntimeException("Cannot completed a CANCELLED order.");
+        }
+
+        // Thay đổi trạng thái đơn hàng thành COMPLETED
+        order.setStatus(OrderStatus.COMPLETED);
+
+        // Lưu lại đơn hàng với trạng thái đã COMPLETED
+        return orderRepository.save(order);
+    }
 
     public String create(OrderRequest orderRequest) throws Exception {
         float total = 0;

@@ -14,8 +14,8 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> 
 
     @Query("SELECT od.product, SUM(od.quantity) AS totalSold " +
             "FROM OrderDetail od " +
-            "WHERE od.order.status = 1 " +  // chỉ lấy đơn hàng đã thanh toán
+            "WHERE od.order.status = 1 or od.order.status = 2" +  // lấy đơn hàng đã thanh toán và hoàn thành
             "GROUP BY od.product " +
             "ORDER BY totalSold DESC")
-    List<Object[]> findTop5BestSellingProducts(@Param("status") OrderStatus status);
+    List<Object[]> findTop5BestSellingProducts();
 }

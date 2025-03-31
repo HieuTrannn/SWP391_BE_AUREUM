@@ -60,11 +60,9 @@ public class DashboardService {
         return states;
     }
 
-
-
     // Phương thức lấy top 5 sản phẩm bán chạy nhất
     public List<Object[]> getTop5BestSellingProducts() {
-        return orderDetailRepository.findTop5BestSellingProducts(OrderStatus.PAID);
+        return orderDetailRepository.findTop5BestSellingProducts();
     }
 
     public Object getRevenueByPeriod(Date date, Integer month, Integer year, String period) {
@@ -73,16 +71,18 @@ public class DashboardService {
             year = Calendar.getInstance().get(Calendar.YEAR);  // Lấy năm hiện tại
         }
 
+        List<OrderStatus> statuses = Arrays.asList(OrderStatus.PAID, OrderStatus.COMPLETED);  // Lấy cả PAID và COMPLETED
+
         // Kiểm tra period và xử lý theo từng trường hợp
         if ("day".equals(period)) {
-            return orderRepository.getRevenueByDay(date, OrderStatus.PAID) != null
-                    ? orderRepository.getRevenueByDay(date, OrderStatus.PAID)
+            return orderRepository.getRevenueByDay(date, statuses) != null
+                    ? orderRepository.getRevenueByDay(date, statuses)
                     : 0;
         } else if ("month".equals(period)) {
             // Kiểm tra month và year để tránh null
             if (month != null && year != null) {
-                return orderRepository.getRevenueByMonth(month, year, OrderStatus.PAID) != null
-                        ? orderRepository.getRevenueByMonth(month, year, OrderStatus.PAID)
+                return orderRepository.getRevenueByMonth(month, year, statuses) != null
+                        ? orderRepository.getRevenueByMonth(month, year, statuses)
                         : 0;
             } else {
                 throw new IllegalArgumentException("Month and year must be provided when period is 'month'");
@@ -90,7 +90,7 @@ public class DashboardService {
         } else if ("year".equals(period)) {
             // Trả về doanh thu theo từng tháng trong năm
             if (year != null) {
-                List<Object[]> results = orderRepository.getRevenueByYear(year, OrderStatus.PAID);
+                List<Object[]> results = orderRepository.getRevenueByYear(year, statuses);
                 if (results.isEmpty()) {
                     return 0;
                 }
@@ -102,13 +102,4 @@ public class DashboardService {
         return 0;  // Mặc định trả về 0 nếu không match được với period
     }
 
-
-
-
-
-//    public Map<String, Object> getMonthlyRevenue(){
-//        Map<String, Object> revenueDate = new HashMap<>();
-//
-//
-//    }
 }

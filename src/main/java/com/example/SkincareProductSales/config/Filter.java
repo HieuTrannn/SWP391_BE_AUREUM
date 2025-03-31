@@ -62,6 +62,9 @@ public class Filter extends OncePerRequestFilter {
         if(method.equals("GET") && patchMatch.match("/api/category/**", uri)){
             return true; // public api
         }
+        if(method.equals("GET") && patchMatch.match("/api/skin/**", uri)){
+            return true; // public api
+        }
 
         return AUTH_PERMISSION.stream().anyMatch(item -> patchMatch.match(item, uri));
     }

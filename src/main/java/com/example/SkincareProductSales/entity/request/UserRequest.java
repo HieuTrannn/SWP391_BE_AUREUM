@@ -18,8 +18,6 @@ public class UserRequest {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     public LocalDate dateOfBirth;
 
-    public String address;
-
     public String phone;
 
     @NotNull
@@ -28,11 +26,10 @@ public class UserRequest {
     public UserRequest() {
     }
 
-    public UserRequest(String fullName, String gender, LocalDate dateOfBirth, String address, String phone, long skinId) {
+    public UserRequest(String fullName, String gender, LocalDate dateOfBirth, String phone, long skinId) {
         this.fullName = fullName;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
-        this.address = address;
         this.phone = phone;
         this.skinId = skinId;
     }
@@ -59,14 +56,6 @@ public class UserRequest {
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getPhone() {

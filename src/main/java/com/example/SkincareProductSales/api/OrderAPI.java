@@ -46,9 +46,30 @@ public class OrderAPI {
 
     // API hủy đơn hàng
     @PutMapping("/cancel/{orderId}")
-    public ResponseEntity cancelOrder(@PathVariable long orderId, @PathVariable OrderStatus status) {
+    public ResponseEntity cancelOrder(@PathVariable long orderId) {
         try {
             Order order = orderService.cancelOrder(orderId);
+            return ResponseEntity.ok(order);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body("Error: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/completed/{orderId}")
+    public ResponseEntity completeOrder(@PathVariable long orderId) {
+        try {
+            Order order = orderService.completedOrder(orderId);
+            return ResponseEntity.ok(order);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body("Error: " + e.getMessage());
+        }
+    }
+
+    // API hủy đơn hàng
+    @PutMapping("/refund/{orderId}")
+    public ResponseEntity refundOrder(@PathVariable long orderId) {
+        try {
+            Order order = orderService.refundOrder(orderId);
             return ResponseEntity.ok(order);
         } catch (RuntimeException e) {
             return ResponseEntity.status(400).body("Error: " + e.getMessage());
